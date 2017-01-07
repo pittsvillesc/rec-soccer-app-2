@@ -1,0 +1,91 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="rec-soccer-list">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                
+            }
+            .item-col-container {
+                @apply(--layout-horizontal);
+            }
+            .item-col-l {
+                
+            }
+            .item-col-r {
+                
+            }
+            .item-col-m {
+                @apply(--layout-flex)
+            }
+            .list-item {
+                --paper-item-selected: {
+                    background-color: #e1f2fe;
+                };
+                --paper-item-focused: {
+                    background-color: #e1f2fe!important;
+                }
+                --paper-item-focused-before: {
+                    background-color: #e1f2fe!important;
+                }
+            }
+        </style>        
+
+        <div on-click="showData">{{title}}</div>
+        <template is="dom-repeat" items="[[data]]">
+            <paper-item class="list-item">
+                <div class="item-col-container">
+                    <div class="item-col-l" hidden$="[[!showCheckbox]]">
+                        <paper-checkbox id="cb-[[index]]"></paper-checkbox>
+                    </div>
+                    <div class="item-col-m"></div>
+                    <div class="item-col-r"></div>
+                    <div class="item-col-r" hidden$="[[!showIndicator]]">ind</div>
+                </div>
+            </paper-item>
+        </template>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'rec-soccer-list',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<rec-soccer-list></rec-soccer-list>"
+                },
+                data: {
+                    type: Array,
+                },
+                addItem: {
+                    type: Object,
+                },
+                showCheckbox: {
+                    type: Boolean,
+                    value: false
+                },
+                showIndicator: {
+                    type: Boolean,
+                }
+            },
+            showData: function() {
+                console.info("Data:", this.data);
+            }
+        });
+    </script>
+</dom-module>

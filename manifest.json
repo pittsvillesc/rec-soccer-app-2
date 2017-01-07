@@ -1,0 +1,20 @@
+{
+  "name": "Wis. Rapids Rec Soccer",
+  "short_name": "Rec Soccer App",
+  "start_url": "/?homescreen=1",
+  "display": "standalone",
+  "theme_color": "#5E8C9C",
+  "background_color": "#C0D2D6",
+  "icons": [
+    {
+      "src": "images/manifest/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/manifest/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

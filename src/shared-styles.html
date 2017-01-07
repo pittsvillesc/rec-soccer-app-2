@@ -1,0 +1,62 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<!-- shared styles for all views -->
+<dom-module id="shared-styles">
+    <template>
+    <style>
+        .list-container {
+            padding-top: 16px;
+            margin-left: 7px;
+            margin-right: 7px;
+            padding-left: 7px;
+            padding-right: 7px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            
+        }
+        .list-item {
+            height: 46px;
+            background-color: #fff;
+            margin-bottom: 2px;
+            padding-left: 4px;
+            padding-right: 4px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px; 
+            
+        }
+        .list-item paper-item {
+            
+        }
+        .item-col-l {
+            padding-left: 8px;
+            padding-right: 8px;
+            height: 20px
+        }
+        .item-col-m {
+            white-space: nowrap;
+            overflow: hidden;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            font-size: 15px;
+            font-weight: 500;
+            color: #262626;
+            cursor: default;
+            position: relative;
+            top: -1px;            
+        }
+        rec-soccer-list {
+            padding-top: 16px;
+        }
+    </style>
+  </template>
+</dom-module>

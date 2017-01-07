@@ -1,0 +1,19 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/rec-soccer-app.html",
+  "fragments": [
+    "src/rec-soccer-contacts.html",
+    "src/rec-soccer-players.html",
+    "src/rec-soccer-registration.html",
+    "src/rec-soccer-view404.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
