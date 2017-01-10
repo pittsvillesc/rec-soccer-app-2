@@ -9,28 +9,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="rec-soccer-list.html">
+<link rel="import" href="contact-form.html">
 
 <dom-module id="rec-soccer-contacts">
     <template>
         <style include="shared-styles">
             :host {
-                display: block;
-/*                padding: 10px;*/
-/*                width: 100%;*/
-                
+                display: block;         
+/*
+                --paper-drawer-panel-drawer-container: {
+                    width: 640px;
+                }
+*/
+            }
+            paper-drawer-panel {
+                top: 50px;
+                margin-left: 0px;
+            }
+            rec-soccer-list {
+                margin-left: 8px;
+            }
+            contact-form: {
+                height: 100%;
+                overflow: auto;
             }
         </style>
         <content></content>
         
-<!--        <div on-click="showData">{{title}} - [[user.uid]]</div>-->
+        <firebase-document id="contactDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/family-contacts/" data="{{selectedContact}}"> </firebase-document>
+        <paper-drawer-panel id="contactDrawer" 
+                            right-drawer
+                            force-narrow
+                            disable-swipe
+                            drawer-width="360px;">
+            <div main>
+                <rec-soccer-list id="contactList"
+                                 data="{{data}}"></rec-soccer-list>
+            </div>
+            <div drawer>
+                
+                <contact-form id="contactForm">
+                    
+                </contact-form>
+            </div>
+        </paper-drawer-panel>
         
-        <rec-soccer-list id="contactList"
-                         data="{{data}}"
-                         show-checkbox
-                         show-indicator></rec-soccer-list>
     </template>
 
     <script>
@@ -44,12 +72,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 contactData: {
                     type: Array,
                     notify: true
+                },
+                userId: {
+                    type: String,
+                    reflectToAttribute: true
 //                    notify: true
+                },
+                contactPath: {
+                    type: String
+                },
+                selectedContact: {
+                    type: Object
                 }
             },
+            listeners: {
+                "openDrawer": "openDrawer",
+                "saveName": "saveContact"
+            },
+            openDrawer: function(e) {
+                this.$.contactDrawer.openDrawer();
+                this.$.contactForm.data = e.detail.data;
+            },
+            saveContact: function(e) {
+//                console.info("Query:", this.$.contactQuery.path);
+//                console.log(e.detail);  
+//                this.fire("saveContact", e.detail);
+//                console.info("contactDoc Path", this.$.contactDoc.path);
+                this.selectedContact = e.detail;
+                this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/");
+            },
             showData: function() {
-               this.fire("showData");
+                this.fire("showData");
             }
+            
         });
+
     </script>
 </dom-module>

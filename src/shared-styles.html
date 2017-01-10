@@ -31,10 +31,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             padding-left: 4px;
             padding-right: 4px;
             -webkit-border-radius: 3px;
-            border-radius: 3px; 
+            border-radius: 3px;             
+            width: 95%;
             
         }
-        .list-item paper-item {
+        .add-item {
+            height: 46px;
+            background-color: var(--app-primary-color);
+            margin-bottom: 8px;
+            padding-left: 4px;
+            padding-right: 4px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px; 
+            color: #fff;       
+            width: 95%;
             
         }
         .item-col-l {
@@ -42,6 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             padding-right: 8px;
             height: 20px
         }
+        
         .item-col-m {
             white-space: nowrap;
             overflow: hidden;
@@ -56,6 +67,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         rec-soccer-list {
             padding-top: 16px;
+        }
+        .input-container-hor {
+            @apply(--layout-horizontal);
+        }
+        .input-container-vert {
+            @apply(--layout-vertical);
+        }
+        .input-el {
+            margin-right: 6px;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+        .item-col-container {
+            @apply(--layout-horizontal);
+            width: 95%;
+        }
+        .item-col-l {
+
+        }
+        .item-col-r {
+
+        }
+        .item-col-m {
+            @apply(--layout-flex)
         }
     </style>
   </template>

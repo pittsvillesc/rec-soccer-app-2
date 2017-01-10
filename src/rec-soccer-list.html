@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="name-form-el.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="rec-soccer-list">
@@ -21,18 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 display: block;
                 
             }
-            .item-col-container {
-                @apply(--layout-horizontal);
-            }
-            .item-col-l {
-                
-            }
-            .item-col-r {
-                
-            }
-            .item-col-m {
-                @apply(--layout-flex)
-            }
+            
             .list-item {
                 --paper-item-selected: {
                     background-color: #e1f2fe;
@@ -44,17 +34,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     background-color: #e1f2fe!important;
                 }
             }
+            .detail-icon {
+                --iron-icon: {
+                    color: var(--app-primary-color);
+                }
+            }
+
         </style>        
 
         <div on-click="showData">{{title}}</div>
-        <template is="dom-repeat" items="[[data]]">
-            <paper-item class="list-item">
+        
+        <paper-item class="add-item" on-focus="setAddMode">
+            <name-form-el id="contactAddItem"></name-form-el>
+        </paper-item>
+        
+        <template is="dom-repeat" items="{{data}}">
+            <paper-item class="list-item" on-focus="selectContact" data="[[item]]">
                 <div class="item-col-container">
-                    <div class="item-col-l" hidden$="[[!showCheckbox]]">
-                        <paper-checkbox id="cb-[[index]]"></paper-checkbox>
+                    <div class="item-col-l">
+                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]"></paper-checkbox>                        
                     </div>
-                    <div class="item-col-m"></div>
-                    <div class="item-col-r"></div>
+                    <div class="item-col-m">
+                        [[item.firstName]] [[item.lastName]]
+                    </div>
+                    <div class="item-col-r">
+                        <iron-icon class="detail-icon" icon="chrome-reader-mode"></iron-icon>
+                    </div>
                     <div class="item-col-r" hidden$="[[!showIndicator]]">ind</div>
                 </div>
             </paper-item>
@@ -71,6 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 data: {
                     type: Array,
+                    notify: true
                 },
                 addItem: {
                     type: Object,
@@ -81,7 +87,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 showIndicator: {
                     type: Boolean,
+                    value: false
+                },
+                contactSelected: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true,
+                    notify: true    
                 }
+            },
+            listeners: {
+//                "saveName": "saveName"
+            },
+            setAddMode: function() {
+                this.$.contactAddItem.hasFocus = true;
+                this.contactSelected = false;
+            },
+            selectContact: function(e) {                
+                this.$.contactAddItem.hasFocus = false;  
+//                this.contactSelected = true;
+                this.fire("openDrawer", {data: e.target.data});
+                console.log(e.target.data);
+            },
+            saveName: function(e) {
+                console.log("In Save Name - rec-soccer-list");
+//                this.fire("saveName", {firstName: e.detail.firstName, lastName: e.detail.lastName});  
             },
             showData: function() {
                 console.info("Data:", this.data);

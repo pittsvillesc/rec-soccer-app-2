@@ -163,6 +163,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </div>
             </iron-selector>
         </app-drawer>
+<!--
+        <app-drawer align="end">
+            RIGHT DRAWER CONTENT
+        </app-drawer>
+-->
         
         <!-- Main content -->
         <app-header-layout has-scrolling-region>
@@ -200,7 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 
                 <rec-soccer-contacts name="contacts"
                                      class="list-container"class="list-container"
-                                     user="[[user]]"
+                                     user-id="[[user.uid]]"
                                      data="{{contactData}}">
                     <firebase-query id="contactQuery" 
                                     app-name="registration-app" 
@@ -236,7 +241,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     observer: '_pageChanged',
                 },
                 user: {
-                    type: String,
+                    type: Object,
                     reflectToAttribute: true,
                     notify: true
                 },
@@ -260,7 +265,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ],
             
             listeners: {
-                "showData": "showData"
+                "showData": "showData",
+                "saveContact": "saveContact"
             },
 
             _routePageChanged: function(page) {
@@ -281,6 +287,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.header = "Current Season Registration";
                         break;
                 }
+            },
+            saveContact: function(e) {
+                console.log(e.detail);  
             },
 
             _pageChanged: function(page) {
