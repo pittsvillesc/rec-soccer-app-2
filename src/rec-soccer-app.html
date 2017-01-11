@@ -36,6 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             --app-primary-color: #5E8C9C;
             --app-secondary-color: black;
             --app-drawer-content-container: { background-color: #F7F7F7; }     
+             --app-drawer-width: 375px;
             display: block;
         }
         
@@ -45,10 +46,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             background-color: var(--app-primary-color);
             padding: 5px;
         }
+/*
 
         app-header paper-icon-button {
             --paper-icon-button-ink-color: white;
         }        
+        #drawer {
+            
+            width: 375px;
+        }
+*/
+        #contentContainer {
+            width: 375px!;
+        }
         #drawer app-toolbar {
             background-color: #547E8C;
             color: #fff;
@@ -90,7 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /*                background-color: @apply(--app-primary-color);*/
                 transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: 1;
-                color: var(--sign-in-text-color, rgb(255, 255, 255));
+                color: var(--sign-in-text-color, rgb(0, 0, 0));
                 @apply(--layout);
                 @apply(--layout-center-center);
         }
@@ -118,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <!-- Drawer content -->
         <app-drawer id="drawer">
-            <app-toolbar>Menu</app-toolbar>
+            <app-toolbar>Rapids Rec Soccer</app-toolbar>
             <iron-selector selected="[[page]]" 
                            attr-for-selected="name" 
                            class="drawer-list" 
@@ -176,55 +186,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         reveals 
                         effects="waterfall">
                 <app-toolbar>
-                    <paper-icon-button icon="my-icons:menu" 
+                    <paper-icon-button icon="menu" 
                                        drawer-toggle></paper-icon-button>
                     <div>[[header]]</div>
                 </app-toolbar>
             </app-header>
+            
             <div hidden$="[[signedIn]]">
-            <firebase-app id="regApp" 
-                          auth-domain="registration-app-a043a.firebaseapp.com" 
-                          database-url="https://registration-app-a043a.firebaseio.com/" 
-                          api-key="AIzaSyCb-qKlzvWaz6gwyURFilfpCr1HUbnZCN8" 
-                          name="registration-app"></firebase-app>
-            <login-fire horizontal 
-                    email-password 
-                    google
-                    app-name="registration-app"
-                    user="{{user}}"
-                    signed-in="{{signedIn}}"
-                    debug></login-fire>
+            
+                <firebase-app id="regApp" 
+                              auth-domain="registration-app-a043a.firebaseapp.com" 
+                              database-url="https://registration-app-a043a.firebaseio.com/" 
+                              api-key="AIzaSyCb-qKlzvWaz6gwyURFilfpCr1HUbnZCN8" 
+                              name="registration-app"></firebase-app>
+                
+                <login-fire horizontal 
+                        email-password 
+                        google
+                        app-name="registration-app"
+                        user="{{user}}"
+                        signed-in="{{signedIn}}"
+                        ></login-fire>     
                 
             </div>
+            
             <div hidden$="[[!signedIn]]">
-            <iron-pages selected="[[page]]" 
-                        attr-for-selected="name" 
-                        fallback-selection="view404" 
-                        role="main">
+                <firebase-document id="controlDoc" 
+                           app-name="registration-app" 
+                           path="/admin/control" data="{{control}}"> </firebase-document>
+                <iron-pages selected="[[page]]" 
+                            attr-for-selected="name" 
+                            fallback-selection="view404" 
+                            role="main">
+
+                    <rec-soccer-contacts name="contacts"
+                                         class="list-container"class="list-container"
+                                         user-id="[[user.uid]]">                    
+                    </rec-soccer-contacts>
+
+                    <rec-soccer-players name="players"
+                                        class="list-container"
+                                        user-id="[[user.uid]]">
+
+                    </rec-soccer-players>
+
+                    <rec-soccer-registration name="registration"
+                                             class="list-container"
+                                             user-id="[[user.uid]]"
+                                             current-season="{{control.currentSeason}}"></rec-soccer-registration>
+                    <rec-soccer-view404 name="view404"
+                                        class="list-container"></rec-soccer-view404>
+
+                </iron-pages>
                 
-                
-                <rec-soccer-contacts name="contacts"
-                                     class="list-container"class="list-container"
-                                     user-id="[[user.uid]]"
-                                     data="{{contactData}}">
-                    <firebase-query id="contactQuery" 
-                                    app-name="registration-app" 
-                                    path="/family-profile/[[user.uid]]/family-contacts" 
-                                    data="{{contactData}}"></firebase-query>
-                </rec-soccer-contacts>
-                <rec-soccer-players name="players"
-                                    class="list-container">
-                    <firebase-query id="playerQuery" 
-                                    app-name="registration-app" 
-                                    path="/family-profile/[[user.uid]]/player-profile" 
-                                    data="{{playerData}}"></firebase-query>
-                </rec-soccer-players>
-                <rec-soccer-registration name="registration"
-                                         class="list-container"></rec-soccer-registration>
-                <rec-soccer-view404 name="view404"
-                                    class="list-container"></rec-soccer-view404>
-                
-            </iron-pages>
             </div>
         </app-header-layout>
     </app-drawer-layout>
@@ -252,8 +266,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 header: {
                     type: String,
-                    notify: true,                    
+                    notify: true,                 
+                    value: "Wis. Rapids Rec Soccer"
                 },
+                control: {
+                    type: Object
+                }
 //                contactData: {
 //                    type: Array
 //                }

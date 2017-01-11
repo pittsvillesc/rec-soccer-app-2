@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="rec-soccer-list.html">
 <link rel="import" href="contact-form.html">
@@ -38,7 +39,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
         <content></content>
-        
+        <firebase-query id="contactQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/family-contacts" 
+                        data="{{contactData}}"></firebase-query>
         <firebase-document id="contactDoc" 
                            app-name="registration-app" 
                            path="/family-profile/[[userId]]/family-contacts/" data="{{selectedContact}}"> </firebase-document>
@@ -49,7 +53,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             drawer-width="360px;">
             <div main>
                 <rec-soccer-list id="contactList"
-                                 data="{{data}}"></rec-soccer-list>
+                                 data="{{contactData}}"
+                                 add-text="Add new Family Contact"></rec-soccer-list>
             </div>
             <div drawer>
                 
@@ -76,30 +81,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 userId: {
                     type: String,
                     reflectToAttribute: true
-//                    notify: true
                 },
                 contactPath: {
                     type: String
                 },
                 selectedContact: {
-                    type: Object
+                    type: Object,
+                    notify: true
                 }
             },
             listeners: {
                 "openDrawer": "openDrawer",
-                "saveName": "saveContact"
+                "saveName": "saveContact",
+                "saveContact": "updateContact"
             },
             openDrawer: function(e) {
                 this.$.contactDrawer.openDrawer();
                 this.$.contactForm.data = e.detail.data;
             },
             saveContact: function(e) {
-//                console.info("Query:", this.$.contactQuery.path);
-//                console.log(e.detail);  
-//                this.fire("saveContact", e.detail);
-//                console.info("contactDoc Path", this.$.contactDoc.path);
-                this.selectedContact = e.detail;
+                var vData = {
+                    firstName: "",
+                    lastName: "",
+                    streetAddress: "",
+                    aptNbr: "",
+                    city: "",
+                    zip: "",
+                    homePhone: "",
+                    mobilePhone: "",
+                    email: ""
+                };
+                vData.firstName = e.detail.firstName;
+                vData.lastName = e.detail.lastName;
+                this.selectedContact = vData;
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/");
+            },
+            updateContact: function(e) {
+                this.selectedContact = e.detail.data;   
+                this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/", e.detail.key);
+                this.$.contactDrawer.close();
             },
             showData: function() {
                 this.fire("showData");

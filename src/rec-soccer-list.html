@@ -41,18 +41,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
         </style>        
-
-        <div on-click="showData">{{title}}</div>
-        
-        <paper-item class="add-item" on-focus="setAddMode">
-            <name-form-el id="contactAddItem"></name-form-el>
+        <content></content>
+<!--        <div on-click="showData">{{title}}</div>-->
+        <div hidden$="{{disableForm}}">
+            <paper-item class="add-item" on-focus="setAddMode">
+                <name-form-el id="contactAddItem"
+                              add-text="{{addText}}"></name-form-el>
         </paper-item>
-        
+        </div>
         <template is="dom-repeat" items="{{data}}">
-            <paper-item class="list-item" on-focus="selectContact" data="[[item]]">
+            <paper-item class="list-item" on-focus="selectContact">
                 <div class="item-col-container">
                     <div class="item-col-l">
-                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]"></paper-checkbox>                        
+                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]" on-change="checkboxFire" data="[[item]]"></paper-checkbox>                        
                     </div>
                     <div class="item-col-m">
                         [[item.firstName]] [[item.lastName]]
@@ -94,6 +95,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     value: false,
                     reflectToAttribute: true,
                     notify: true    
+                },
+                disableForm: {
+                    type: Boolean,
+                    value: false
                 }
             },
             listeners: {
@@ -115,6 +120,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             showData: function() {
                 console.info("Data:", this.data);
+            },
+            checkboxFire: function(e) {
+                this.fire("check", {
+                    checked: e.target.checked,
+                    data: e.target.data
+                });
             }
         });
     </script>

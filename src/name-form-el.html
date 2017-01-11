@@ -36,14 +36,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             .item-col-m {
                 color: #fff;
             }
+            .item-col-container {
+                width: 100%;
+            }
         </style>
 
         <div class="item-col-container">
             <div class="item-col-l">
                 <iron-icon icon="add"></iron-icon>
             </div>
-            <div class="item-col-m" hidden$="[[hasFocus]]">
-                Add new Family Contact
+            <div id="name-form-label" class="item-col-m" hidden$="[[hasFocus]]">
+                {{addText}}
             </div>
             <div class="item-col-m" hidden$="[[!hasFocus]]">
                 <paper-input id="piFirstName"
@@ -80,6 +83,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: Boolean,
                     value: false,
                     reflectToAttribute: true
+                },
+                addText: {
+                    type: String,
                 }
             },
             behaviors: [

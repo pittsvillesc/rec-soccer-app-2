@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--<link rel="import" href="../bower_components/polymerfire/firebase-document.html">-->
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="contact-form">
+<dom-module id="registration-form">
     <template>
         <style include="shared-styles">
             :host {
@@ -59,40 +59,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                      label="Last Name"></paper-input>
                     </div>
                     <div>
-                        <paper-input id="streetAddress"
-                                     value="{{data.streetAddress}}"
-                                     label="Street Address"></paper-input>
+                        <paper-input id="birthdate"
+                                     type="date"
+                                     value="{{data.birthdate}}"
+                                     label="Birthdate"></paper-input>
                     </div>
                     <div>
-                        <paper-input id="aptNbr"
-                                     value="{{data.aptNbr}}"
-                                     label="Apartment Number"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="city"
-                                     value="{{data.city}}"
-                                     label="City"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="zip"
-                                     value="{{data.zip}}"
-                                     label="Zip Code"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="homePhone"
-                                     value="{{data.homePhone}}"
-                                     label="Home Phone"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="mobilePhone"
-                                     value="{{data.mobilePhone}}"
-                                     label="Mobile Phone"></paper-input>
+                        <paper-input id="school"
+                                     value="{{data.school}}"
+                                     label="School"></paper-input>
                     </div>
                     <div>
                         <paper-input id="email"
                                      value="{{data.email}}"
-                                     label="Email Address"></paper-input>
-                    </div>                        
+                                     label="Email"></paper-input>
+                    </div>
+                    <div>
+                        <paper-checkbox id="competitive"
+                                        checked="{{data.competitive}}">Plays Competitive Soccer</paper-checkbox>                                    
+                    </div>                    
                 </div>
             </paper-dialog-scrollable>
             <div class="form-button-container">
@@ -103,38 +88,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
         Polymer({
-            is: 'contact-form',
+            is: 'registration-form',
             properties: {
                 title: {
                     type: String,
-                    value: "<contact-form></contact-form>",
+                    value: "<registration-form></registration-form>",
                 },
                 data: {
                     type: Object,
-                    value: {
-                        streetAddress: "",
-                        aptNbr: "",
-                        city: "",
-                        zip: "",
-                        homePhone: "",
-                        mobilePhone: "",
-                        email: ""
-                    }
+                    
                 }
             },
-            saveContact: function() {
+            saveRegistration: function() {
 //                console.info("Save Data:", this.data);
-                this.fire("saveContact", {
+                this.fire("saveRegistration", {
                     data: {
                         firstName: this.data.firstName,
                         lastName: this.data.lastName,
-                        streetAddress: this.data.streetAddress,
-                        aptNbr: this.data.aptNbr,
-                        city: this.data.city,
-                        zip: this.data.zip,
-                        homePhone: this.data.homePhone,
-                        mobilePhone: this.data.mobilePhone,
-                        email: this.data.email
+                        birthdate: this.data.birthdate,
+                        school: this.data.school,
+                        competitive: this.data.competitive
                     },
                     key: this.data.$key
                 });

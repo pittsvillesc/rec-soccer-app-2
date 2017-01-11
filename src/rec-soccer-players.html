@@ -9,18 +9,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="rec-soccer-list.html">
+<link rel="import" href="player-form.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="rec-soccer-players">
     <template>
         <style include="shared-styles">
             :host {
-                display: block;
-                padding: 10px;
+                display: block;         
+/*
+                --paper-drawer-panel-drawer-container: {
+                    width: 640px;
+                }
+*/
+            }
+            paper-drawer-panel {
+                top: 50px;
+                margin-left: 0px;
+            }
+            rec-soccer-list {
+                margin-left: 8px;
+            }
+            player-form: {
+                height: 100%;
+                overflow: auto;
             }
         </style>
 
-        <div>{{title}}</div>
+        <content></content>
+        <firebase-query id="contactQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/player-profile" 
+                        data="{{playerData}}"></firebase-query>
+        
+        <firebase-document id="playerDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/player-profile/" data="{{selectedPlayer}}"> </firebase-document>
+        
+        <paper-drawer-panel id="playerDrawer" 
+                            right-drawer
+                            force-narrow
+                            disable-swipe
+                            drawer-width="360px;">
+            <div main>
+                <rec-soccer-list id="playerList"
+                                 data="{{playerData}}"
+                                 add-text="Add a new Player"
+                                 on-tap="showFirebaseData"></rec-soccer-list>
+            </div>
+            <div drawer>
+                
+                <player-form id="playerForm">
+                    
+                </player-form>
+            </div>
+        </paper-drawer-panel>
     </template>
 
     <script>
@@ -31,6 +77,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: "<element>rec-soccer-players</element>",
                 },
+                playerData: {
+                    type: Array,
+                    notify: true
+                },
+                userId: {
+                    type: String,
+                    reflectToAttribute: true
+//                    notify: true
+                },
+                playerPath: {
+                    type: String
+                },
+                selectedPlayer: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            listeners: {
+                "openDrawer": "openDrawer",
+                "saveName": "savePlayer",
+                "savePlayer": "updatePlayer"
+            },
+            openDrawer: function(e) {
+                this.$.playerDrawer.openDrawer();
+                this.$.playerForm.data = e.detail.data;
+            },
+            savePlayer: function(e) {
+                var vData = {
+                    firstName: "",
+                    lastName: "",
+                    birthdate: "",
+                    school: "",                    
+                    email: "",
+                    competitive: false
+                };                
+                vData.firstName = e.detail.firstName;
+                vData.lastName = e.detail.lastName;
+                this.selectedPlayer = vData;
+                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/");
+            },
+            updatePlayer: function(e) {
+                this.selectedPlayer = e.detail.data;   
+                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.key);
+                this.$.playerDrawer.closeDrawer();
+            },
+            showData: function() {
+                this.fire("showData");
+            },
+            showFirebaseData: function(e) {
+                console.info("Firebase Data:", this.$.playerQuery);
             }
         });
     </script>

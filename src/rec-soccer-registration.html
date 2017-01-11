@@ -7,20 +7,85 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="rec-soccer-list.html">
 
 <dom-module id="rec-soccer-registration">
     <template>
         <style include="shared-styles">
             :host {
-                display: block;
+                display: block;         
+            }
+            paper-drawer-panel {
+                top: 50px;
+                margin-left: 0px;
+            }
+            rec-soccer-list {
+                margin-left: 8px;
+            }
+            registration-form: {
+                height: 100%;
+                overflow: auto;
+            }
+            paper-item > div {
                 padding: 10px;
             }
+            paper-button > div {
+                padding: 10px;
+            }
+            #checkout {
+                margin-left: 4px;
+                margin-top: 8px;
+            }
         </style>
-
+        
+<!--
         <div>{{title}}</div>
+        <div>Current Season: {{currentSeason}}</div>
+-->
+        
+        <firebase-query id="currentRegQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/player-profile" 
+                        data="{{registrationData}}"></firebase-query>
+        <firebase-document id="regDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/current-registrations/" data="{{selectedReg}}"> </firebase-document>
+        <paper-drawer-panel id="regDrawer" 
+                            right-drawer
+                            force-narrow
+                            disable-swipe
+                            drawer-width="360px;">
+            <div main>
+                <rec-soccer-list id="regList"
+                                 data="{{registrationData}}"
+                                 add-text="{{currentSeason}} Registration"
+                                 disable-form
+                                 show-checkbox>
+                    <paper-item class="add-item">
+                        <div><iron-icon icon="assignment"></iron-icon></div>
+                        
+                        <div>{{currentSeason}} Registration</div>
+                    </paper-item>
+                </rec-soccer-list>
+                <paper-button id="checkout" class="add-item">
+                    
+                    <div><iron-icon icon="payment"></iron-icon></div>
+
+                    <div>Complete {{currentSeason}} Registration</div>
+                </paper-button>
+            </div>
+            <div drawer>
+                
+                <registration-form id="contactForm">
+                    
+                </registration-form>
+            </div>
+        </paper-drawer-panel>
     </template>
 
     <script>
@@ -31,6 +96,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: "<element>rec-soccer-registration</element>",
                 },
+                registrationData: {
+                    type: Array,
+                    notify: true
+                },
+                currentRegistration: {
+                    type: String   
+                },
+                userId: {
+                    type: String
+                }
+            },
+            listeners: {
+                "check": "setRegistration"
+            },
+            setRegistration: function(e) {
+                var vChecked = e.detail.checked;
+                if (vChecked) {
+                    // add the current player to the registration array
+                    this.$.regDoc.data = e.detail.data;
+                    this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/");
+                } else {
+                    
+                }
             }
         });
     </script>
