@@ -93,10 +93,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             listeners: {
                 "openDrawer": "openDrawer",
                 "saveName": "saveContact",
-                "saveContact": "updateContact"
+                "saveContact": "updateContact",
+                "close": "closeDrawer"
             },
             openDrawer: function(e) {
                 this.$.contactDrawer.openDrawer();
+                console.info("Form Data", e.detail.data);
                 this.$.contactForm.data = e.detail.data;
             },
             saveContact: function(e) {
@@ -119,10 +121,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             updateContact: function(e) {
                 this.selectedContact = e.detail.data;   
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/", e.detail.key);
-                this.$.contactDrawer.close();
+                this.$.contactDrawer.closeDrawer();
             },
             showData: function() {
                 this.fire("showData");
+            },
+            closeDrawer: function() {
+                this.$.contactDrawer.closeDrawer();
             }
             
         });

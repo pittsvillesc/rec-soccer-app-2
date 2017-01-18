@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="rec-soccer-list.html">
+<link rel="import" href="registration-form.html">
 
 <dom-module id="rec-soccer-registration">
     <template>
@@ -38,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 padding: 10px;
             }
             #checkout {
-                margin-left: 4px;
+                margin-left: 8px;
                 margin-top: 8px;
             }
         </style>
@@ -54,7 +55,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         data="{{registrationData}}"></firebase-query>
         <firebase-document id="regDoc" 
                            app-name="registration-app" 
-                           path="/family-profile/[[userId]]/current-registrations/" data="{{selectedReg}}"> </firebase-document>
+                           path="/family-profile/[[userId]]/current-registrations/{{currentRegistration}}" data="{{selectedReg}}"> </firebase-document>
+        <firebase-document id="playerDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/player-profile/{{currentRegistration}}" data="{{playerData}}"> </firebase-document>
         <paper-drawer-panel id="regDrawer" 
                             right-drawer
                             force-narrow
@@ -76,12 +80,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     
                     <div><iron-icon icon="payment"></iron-icon></div>
 
-                    <div>Complete {{currentSeason}} Registration</div>
+                    <div>Complete Registration</div>
+                    
+                    <div><iron-icon icon="arrow-forward"></iron-icon></div>
                 </paper-button>
             </div>
             <div drawer>
                 
-                <registration-form id="contactForm">
+                <registration-form id="regForm">
                     
                 </registration-form>
             </div>
@@ -101,24 +107,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     notify: true
                 },
                 currentRegistration: {
-                    type: String   
+                    type: String,
+                    notify: true
                 },
                 userId: {
                     type: String
+                },
+                playerData: {
+                    type: Object,
+                    notify: true
                 }
             },
             listeners: {
-                "check": "setRegistration"
+                "check": "setRegistration",
+                "close": "closeDrawer",
+                "openDrawer": "openDrawer"
             },
             setRegistration: function(e) {
                 var vChecked = e.detail.checked;
-                if (vChecked) {
-                    // add the current player to the registration array
-                    this.$.regDoc.data = e.detail.data;
-                    this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/");
-                } else {
-                    
+                var vHoldRegData = {
+                    birthdate: e.detail.data.birthdate,
+                    competitive: e.detail.data.competitive,
+                    firstName: e.detail.data.firstName,
+                    lastName: e.detail.data.lastName,
+                    school: e.detail.data.school,
+                };
+                var vHoldPlayerData = {
+                    birthdate: e.detail.data.birthdate,
+                    competitive: e.detail.data.competitive,
+                    firstName: e.detail.data.firstName,
+                    lastName: e.detail.data.lastName,
+                    school: e.detail.data.school,
+                    isActive: e.detail.data.isActive
                 }
+                
+                this.currentRegistration = e.detail.data.$key;
+                
+                if (vChecked) {
+                    var exists = true;
+                    this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + e.detail.data.$key + "/";
+                    exists = !this.$.regDoc.zeroValue;
+                    if (!exists) {
+                        this.$.regDoc.data = vHoldRegData;
+                        this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.data.$key);
+                        vHoldPlayerData.isActive = true;
+                        this.$.playerDoc.data = vHoldPlayerData;
+                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
+                    } else {
+                        this.$.regDoc.data = vHoldRegData;
+                        this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.data.$key);
+                        vHoldPlayerData.isActive = true;
+                        this.$.playerDoc.data = vHoldPlayerData;
+                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
+                    }
+                    this.$.regForm.data = this.$.regDoc.data;
+                    this.$.regDrawer.openDrawer();
+                } else {
+                          this.$.regDoc.path = "/family-profile/" + this.userId + "/player-profile/" + e.detail.data.$key + "/";
+                        vHoldPlayerData.isActive = false;
+                        this.$.playerDoc.data = vHoldPlayerData;
+                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
+                }
+            },
+            openDrawer: function(e) {
+                this.currentRegistration = e.detail.data.$key;
+                this.$.regDrawer.openDrawer();
+                this.$.regForm.data = e.detail.data;
+            },
+            closeDrawer: function() {
+                this.$.regDrawer.closeDrawer();
             }
         });
     </script>

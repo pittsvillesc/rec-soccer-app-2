@@ -97,7 +97,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             listeners: {
                 "openDrawer": "openDrawer",
                 "saveName": "savePlayer",
-                "savePlayer": "updatePlayer"
+                "savePlayer": "updatePlayer",
+                "close": "closeDrawer"
             },
             openDrawer: function(e) {
                 this.$.playerDrawer.openDrawer();
@@ -110,7 +111,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     birthdate: "",
                     school: "",                    
                     email: "",
-                    competitive: false
+                    competitive: false,
+                    isActive: true
                 };                
                 vData.firstName = e.detail.firstName;
                 vData.lastName = e.detail.lastName;
@@ -127,6 +129,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             showFirebaseData: function(e) {
                 console.info("Firebase Data:", this.$.playerQuery);
+            },
+            closeDrawer: function() {
+                this.$.playerDrawer.closeDrawer();
             }
         });
     </script>

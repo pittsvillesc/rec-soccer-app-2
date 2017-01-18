@@ -50,10 +50,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-item>
         </div>
         <template is="dom-repeat" items="{{data}}">
-            <paper-item class="list-item" on-focus="selectContact">
+            <paper-item class="list-item" on-focus="selectContact" data="[[item]]">
                 <div class="item-col-container">
                     <div class="item-col-l">
-                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]" on-change="checkboxFire" data="[[item]]"></paper-checkbox>                        
+                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]" on-change="checkboxFire" data="[[item]]" checked$="[[item.isActive]]"></paper-checkbox>                        
                     </div>
                     <div class="item-col-m">
                         [[item.firstName]] [[item.lastName]]

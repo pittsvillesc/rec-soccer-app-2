@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">-->
 <link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <!--<link rel="import" href="../bower_components/polymerfire/firebase-document.html">-->
 <link rel="import" href="shared-styles.html">
@@ -45,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--        <content></content>-->
         
         <section>
-            <div class="form-header">Contact Information</div>
+            <div class="form-header"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Contact Information</div>
             <paper-dialog-scrollable>
                 <div class="form-fields-container">
                     <div>
@@ -138,6 +139,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     },
                     key: this.data.$key
                 });
+            },
+            closeDrawer: function() {
+                this.fire("close");
             }
         });
     </script>
