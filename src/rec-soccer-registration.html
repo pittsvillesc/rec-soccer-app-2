@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 margin-left: 8px;
             }
             registration-form: {
-                height: 100%;
+                height: 100%!important;
                 overflow: auto;
             }
             paper-item > div {
@@ -121,7 +121,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             listeners: {
                 "check": "setRegistration",
                 "close": "closeDrawer",
-                "openDrawer": "openDrawer"
+                "openDrawer": "openDrawer",
+                "saveRegistration": "updateRegistration"
             },
             setRegistration: function(e) {
                 var vChecked = e.detail.checked;
@@ -131,6 +132,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     firstName: e.detail.data.firstName,
                     lastName: e.detail.data.lastName,
                     school: e.detail.data.school,
+                    grade: "",
+                    shirtSize: "",
+                    division: "",
+                    acknowledgedConcussionInfo: false,
+                    acknowledgedWaiver: false
                 };
                 var vHoldPlayerData = {
                     birthdate: e.detail.data.birthdate,
@@ -168,6 +174,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.$.playerDoc.data = vHoldPlayerData;
                         this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
                 }
+            },
+            updateRegistration: function(e) {
+                var vHoldRegData = {
+                    birthdate: e.detail.playerData.birthdate,
+                    competitive: e.detail.playerData.competitive,
+                    firstName: e.detail.playerData.firstName,
+                    lastName: e.detail.playerData.lastName,
+                    school: e.detail.playerData.school,
+                    grade: (e.detail.regData.grade) ? e.detail.regData.grade : "",
+                    shirtSize: (e.detail.regData.shirtSize) ? e.detail.regData.shirtSize : "",
+                    division: (e.detail.regData.division) ? e.detail.regData.division : "",
+                    acknowledgedConcussionInfo: (e.detail.regData.acknowledgedConcussionInfo) ? true : false,
+                    acknowledgedWaiver: (e.detail.regData.acknowledgedWaiver) ? true : false
+                };
+                var vHoldPlayerData = {
+                    birthdate: e.detail.playerData.birthdate,
+                    competitive: e.detail.playerData.competitive,
+                    firstName: e.detail.playerData.firstName,
+                    lastName: e.detail.playerData.lastName,
+                    school: e.detail.playerData.school,
+                    isActive: e.detail.playerData.isActive
+                };
+                this.$.regDoc.data = vHoldRegData;
+                this.$.playerDoc.data = vHoldPlayerData;
+                this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.key);
+                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.key);
+                this.closeDrawer();
             },
             openDrawer: function(e) {
                 this.currentRegistration = e.detail.data.$key;

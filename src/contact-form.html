@@ -12,9 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <!--<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">-->
 <link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <!--<link rel="import" href="../bower_components/polymerfire/firebase-document.html">-->
 <link rel="import" href="shared-styles.html">
 
@@ -27,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
             section {
                 width: inherit;                
-                height: 500px;                
+                height: 650px;                
                 @apply(--layout-vertical);
             }
             section paper-dialog-scrollable {
@@ -41,64 +46,175 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     color: var(--app-primary-color);
                 }
             }
+            paper-dropdown-menu {
+                width: 100%;
+            }
         </style>
         
 <!--        <content></content>-->
         
         <section>
-            <div class="form-header"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Contact Information</div>
+            <div class="form-header" hidden$="{{showVolunteer}}"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Contact Information</div>
+            <div class="form-header" hidden$="{{!showVolunteer}}"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Volunteer Preferences</div>
             <paper-dialog-scrollable>
                 <div class="form-fields-container">
-                    <div>
-                        <paper-input id="firstName"
-                                     value="{{data.firstName}}"
-                                     label="First Name"></paper-input>
+                    <div hidden$="{{showVolunteer}}">
+                        <div>
+                            <paper-input id="firstName"
+                                         value="{{data.firstName}}"
+                                         label="First Name"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="lastName"
+                                         value="{{data.lastName}}"
+                                         label="Last Name"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="streetAddress"
+                                         value="{{data.streetAddress}}"
+                                         label="Street Address"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="aptNbr"
+                                         value="{{data.aptNbr}}"
+                                         label="Apartment Number"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="city"
+                                         value="{{data.city}}"
+                                         label="City"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="zip"
+                                         value="{{data.zip}}"
+                                         label="Zip Code"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="homePhone"
+                                         value="{{data.homePhone}}"
+                                         label="Home Phone"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="mobilePhone"
+                                         value="{{data.mobilePhone}}"
+                                         label="Mobile Phone"></paper-input>
+                        </div>
+                        <div>
+                            <paper-input id="email"
+                                         value="{{data.email}}"
+                                         label="Email Address"></paper-input>
+                        </div>                        
                     </div>
-                    <div>
-                        <paper-input id="lastName"
-                                     value="{{data.lastName}}"
-                                     label="Last Name"></paper-input>
+                    <div hidden$="{{!showVolunteer}}">
+                        <div>
+                            <paper-checkbox id="buyoutOption"
+                                            checked="{{data.volunteerPref.buyoutOption}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>$35 Volunteer Buyout Option</div>
+                                        <div secondary>A $35 charge is added to the registration to <br />cover the required work hours.</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        <div>
+                            <paper-checkbox id="fieldSetUp"
+                                            checked="{{data.volunteerPref.fieldSetup}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>Field Set-Up</div>
+                                        <div secondary>Help with field set up before matches from <br />8-8:45 on either weeks 1,2,3 or Weeks 3,4,5</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        <div>
+                            <paper-checkbox id="fieldTakeDown"
+                                            checked="{{data.volunteerPref.fieldTakeDown}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>Field Take Down</div>
+                                        <div secondary>Help with field take down after matches <br />8-8:45 on either weeks 1,2,3 or Weeks 3,4,5</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        <div>
+                            <paper-checkbox id="refereeAid"
+                                            checked="{{data.volunteerPref.refereeAid}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>Referee Aide</div>
+                                        <div secondary>Check or select option to view job duties.</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        
+                        <div>
+                            <paper-checkbox id="coach"
+                                            checked="{{data.volunteerPref.coach}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>Coach</div>
+                                        <div secondary>Check or select option to view job duties.</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        <div>
+                            <paper-checkbox id="coach"
+                                            checked="{{data.volunteerPref.coach}}">
+                                <paper-item>
+                                    <paper-item-body two-line>
+                                        <div>Assistant Coach</div>
+                                        <div secondary>Assist coach with practices and matches,<br /> POSITIVELY motivating players</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
+                        <div>
+                            <paper-dropdown-menu id="shirtSize"
+                                                 label="T-Shirt Size"
+                                                 value="{{data.volunteerPref.shirtSize}}">
+                                <paper-listbox class="dropdown-content">
+                                    <paper-item>Small (34-36)</paper-item>
+                                    <paper-item>Medium (38-40)</paper-item>
+                                    <paper-item>Large (42-44)</paper-item>
+                                    <paper-item>X Large (46-48)</paper-item>
+                                    <paper-item>XX Large (50-52)</paper-item>
+                                </paper-listbox>
+                            </paper-dropdown-menu>                                             
+                        </div>
+                        <div>
+                            <paper-checkbox id="multipleTeams"
+                                            checked="{{data.volunteerPref.moreThanOneTeam}}">
+                                <paper-item>
+                                    <paper-item-body>
+                                        <div>Coaching more than one team</div>
+                                    </paper-item-body>
+                                </paper-item>
+                            </paper-checkbox>
+                        </div>
                     </div>
-                    <div>
-                        <paper-input id="streetAddress"
-                                     value="{{data.streetAddress}}"
-                                     label="Street Address"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="aptNbr"
-                                     value="{{data.aptNbr}}"
-                                     label="Apartment Number"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="city"
-                                     value="{{data.city}}"
-                                     label="City"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="zip"
-                                     value="{{data.zip}}"
-                                     label="Zip Code"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="homePhone"
-                                     value="{{data.homePhone}}"
-                                     label="Home Phone"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="mobilePhone"
-                                     value="{{data.mobilePhone}}"
-                                     label="Mobile Phone"></paper-input>
-                    </div>
-                    <div>
-                        <paper-input id="email"
-                                     value="{{data.email}}"
-                                     label="Email Address"></paper-input>
-                    </div>                        
                 </div>
             </paper-dialog-scrollable>
             <div class="form-button-container">
                 <paper-button id="saveInfo" on-tap="saveContact"><iron-icon icon="save"></iron-icon>Save</paper-button>
             </div>
+<!--
+            <div hidden$="{{!showVolunteer}}">
+                <div class="form-header"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Volunteer Preferences</div>
+                <paper-dialog-scrollable>
+                    <div class="form-fields-container">
+                        
+                    </div>
+                </paper-dialog-scrollable>
+                <div class="form-button-container">
+                    <paper-button id="saveVolunteer" on-tap="saveVolunteer"><iron-icon icon="save"></iron-icon>Save</paper-button>
+                </div>
+            </div>
+-->
         </section>
     </template>
 
@@ -121,24 +237,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         mobilePhone: "",
                         email: ""
                     }
+                },
+                showVolunteer: {
+                    type: Boolean,        
+                    value: false
+                }
+            },
+            computeHeader: function(x) {
+                if (x) {
+                    return "Volunteer Preferences";
+                } else {
+                    return "Contact Information";
                 }
             },
             saveContact: function() {
 //                console.info("Save Data:", this.data);
-                this.fire("saveContact", {
-                    data: {
-                        firstName: this.data.firstName,
-                        lastName: this.data.lastName,
-                        streetAddress: this.data.streetAddress,
-                        aptNbr: this.data.aptNbr,
-                        city: this.data.city,
-                        zip: this.data.zip,
-                        homePhone: this.data.homePhone,
-                        mobilePhone: this.data.mobilePhone,
-                        email: this.data.email
-                    },
-                    key: this.data.$key
-                });
+                if (this.showVolunteer) {
+                    
+                } else {
+                    this.fire("saveContact", {
+                        data: {
+                            firstName: this.data.firstName,
+                            lastName: this.data.lastName,
+                            streetAddress: this.data.streetAddress,
+                            aptNbr: this.data.aptNbr,
+                            city: this.data.city,
+                            zip: this.data.zip,
+                            homePhone: this.data.homePhone,
+                            mobilePhone: this.data.mobilePhone,
+                            email: this.data.email
+                        },
+                        key: this.data.$key
+                    });
+                }
             },
             closeDrawer: function() {
                 this.fire("close");

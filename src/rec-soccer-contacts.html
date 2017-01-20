@@ -37,6 +37,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 height: 100%;
                 overflow: auto;
             }
+            #checkout {
+                margin-left: 8px;
+                margin-top: 8px;
+            }
+            paper-button > div {
+                padding: 10px;
+            }
         </style>
         <content></content>
         <firebase-query id="contactQuery" 
@@ -55,12 +62,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <rec-soccer-list id="contactList"
                                  data="{{contactData}}"
                                  add-text="Add new Family Contact"></rec-soccer-list>
-            </div>
-            <div drawer>
                 
+                <paper-button id="checkout" class="add-item" on-tap="openVolunteer">
+                    
+                    <div><iron-icon icon="work"></iron-icon></div>
+
+                    <div>Volunteer Preferences</div>
+                    
+                </paper-button>
+            </div>
+            <div drawer>                
                 <contact-form id="contactForm">
                     
-                </contact-form>
+                </contact-form>                
             </div>
         </paper-drawer-panel>
         
@@ -97,9 +111,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 "close": "closeDrawer"
             },
             openDrawer: function(e) {
+                this.$.contactForm.showVolunteer = false;
                 this.$.contactDrawer.openDrawer();
                 console.info("Form Data", e.detail.data);
                 this.$.contactForm.data = e.detail.data;
+            },
+            openVolunteer: function() {
+                this.$.contactForm.showVolunteer = true;
+                this.$.contactDrawer.openDrawer();
             },
             saveContact: function(e) {
                 var vData = {
@@ -118,7 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.selectedContact = vData;
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/");
             },
-            updateContact: function(e) {
+            updateContact: function(e) {                
                 this.selectedContact = e.detail.data;   
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/", e.detail.key);
                 this.$.contactDrawer.closeDrawer();

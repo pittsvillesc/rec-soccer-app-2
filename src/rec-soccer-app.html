@@ -133,9 +133,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            attr-for-selected="name" 
                            class="drawer-list" 
                            role="navigation">
+                <a name="home"
+                   href="/">
+                    <div class="link-icon">
+                        <iron-icon icon="home"></iron-icon>
+                    </div>
+                    <div class="link-text">
+                        Home
+                    </div>                    
+                </a>
                 <div hidden$="[[signedIn]]">
                     <a name="contacts"
-                       href="/contacts"><iron-icon icon="lock"></iron-icon>Sign In</a>
+                       href="/contacts">
+                        <div class="link-icon">
+                            <iron-icon icon="lock"></iron-icon>
+                        </div>
+                        <div class="link-text">
+                            Sign In
+                        </div>
+                    </a>
                 </div>
                 <div hidden$="[[!signedIn]]">                    
                     <a name="contacts" 
@@ -296,7 +312,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 
                 switch(page) {
                     case "contacts":
-                        this.header = "Family Contacts (Parents/Guardians)";
+                        this.header = "Family Contacts";
                         break;
                     case "players":
                         this.header = "Rec Soccer Players";
