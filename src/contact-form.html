@@ -18,8 +18,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <!--<link rel="import" href="../bower_components/polymerfire/firebase-document.html">-->
 <link rel="import" href="shared-styles.html">
 
@@ -55,7 +53,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <section>
             <div class="form-header" hidden$="{{showVolunteer}}"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Contact Information</div>
-            <div class="form-header" hidden$="{{!showVolunteer}}"><iron-icon icon="arrow-back" on-tap="closeDrawer"></iron-icon> Volunteer Preferences</div>
             <paper-dialog-scrollable>
                 <div class="form-fields-container">
                     <div hidden$="{{showVolunteer}}">
@@ -104,99 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                          value="{{data.email}}"
                                          label="Email Address"></paper-input>
                         </div>                        
-                    </div>
-                    <div hidden$="{{!showVolunteer}}">
-                        <div>
-                            <paper-checkbox id="buyoutOption"
-                                            checked="{{data.volunteerPref.buyoutOption}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>$35 Volunteer Buyout Option</div>
-                                        <div secondary>A $35 charge is added to the registration to <br />cover the required work hours.</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        <div>
-                            <paper-checkbox id="fieldSetUp"
-                                            checked="{{data.volunteerPref.fieldSetup}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>Field Set-Up</div>
-                                        <div secondary>Help with field set up before matches from <br />8-8:45 on either weeks 1,2,3 or Weeks 3,4,5</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        <div>
-                            <paper-checkbox id="fieldTakeDown"
-                                            checked="{{data.volunteerPref.fieldTakeDown}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>Field Take Down</div>
-                                        <div secondary>Help with field take down after matches <br />8-8:45 on either weeks 1,2,3 or Weeks 3,4,5</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        <div>
-                            <paper-checkbox id="refereeAid"
-                                            checked="{{data.volunteerPref.refereeAid}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>Referee Aide</div>
-                                        <div secondary>Check or select option to view job duties.</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        
-                        <div>
-                            <paper-checkbox id="coach"
-                                            checked="{{data.volunteerPref.coach}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>Coach</div>
-                                        <div secondary>Check or select option to view job duties.</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        <div>
-                            <paper-checkbox id="coach"
-                                            checked="{{data.volunteerPref.coach}}">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>Assistant Coach</div>
-                                        <div secondary>Assist coach with practices and matches,<br /> POSITIVELY motivating players</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                        <div>
-                            <paper-dropdown-menu id="shirtSize"
-                                                 label="T-Shirt Size"
-                                                 value="{{data.volunteerPref.shirtSize}}">
-                                <paper-listbox class="dropdown-content">
-                                    <paper-item>Small (34-36)</paper-item>
-                                    <paper-item>Medium (38-40)</paper-item>
-                                    <paper-item>Large (42-44)</paper-item>
-                                    <paper-item>X Large (46-48)</paper-item>
-                                    <paper-item>XX Large (50-52)</paper-item>
-                                </paper-listbox>
-                            </paper-dropdown-menu>                                             
-                        </div>
-                        <div>
-                            <paper-checkbox id="multipleTeams"
-                                            checked="{{data.volunteerPref.moreThanOneTeam}}">
-                                <paper-item>
-                                    <paper-item-body>
-                                        <div>Coaching more than one team</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
-                    </div>
+                    </div>                    
                 </div>
             </paper-dialog-scrollable>
             <div class="form-button-container">

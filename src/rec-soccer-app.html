@@ -252,6 +252,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                              current-season="{{control.currentSeason}}"></rec-soccer-registration>
                     <rec-soccer-view404 name="view404"
                                         class="list-container"></rec-soccer-view404>
+                    
+                    <rec-soccer-volunteer-preferences name="volunteer-preferences"
+                                                      class="list-container"
+                                                      user-id="[[user.uid]]"></rec-soccer-volunteer-preferences>
 
                 </iron-pages>
                 
@@ -300,7 +304,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             
             listeners: {
                 "showData": "showData",
-                "saveContact": "saveContact"
+                "saveContact": "saveContact",
+                "volunteer": "volunteerRedirect"
             },
 
             _routePageChanged: function(page) {
@@ -309,7 +314,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 if (!this.$.drawer.persistent) {
                     this.$.drawer.close();
                 }
-                
+                console.info(page);
                 switch(page) {
                     case "contacts":
                         this.header = "Family Contacts";
@@ -319,6 +324,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         break;
                     case "registration":
                         this.header = "Current Season Registration";
+                        break;
+                    case "volunteer-preferences":
+                        this.header = "Volunteer Preferences";
                         break;
                 }
             },
@@ -339,7 +347,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                      console.info("contactQuery Data:", this.$.contactQuery.data);
                 console.info("contactQuery Ref:", this.$.contactQuery);
                 console.info("contactQuery Path:", this.$.contactQuery.path);
-                }
+                },
+            volunteerRedirect: function() {
+                this.header = "Volunteer Preferences";
+                this.page = "volunteer-preferences";
+            }
         });
 
     </script>

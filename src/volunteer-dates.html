@@ -1,0 +1,120 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html"
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="volunteer-dates">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+            paper-toggle-button {
+                --paper-toggle-button-checked-button-color: var(--app-primary-color);
+                --paper-toggle-button-checked-bar-color: #B0C4CB;
+            }
+            .date-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-justify);
+                margin-bottom: 10px;
+            }
+            
+            .date-container > div {
+                @apply(--layout-vertical);
+                padding: 5px;
+                width: 50%;
+                
+            }
+            paper-toggle-button {
+                margin-top: 8px;
+            }
+            .date-container-justify {
+                @apply(--layout-vertical);
+                @apply(--layout-self-center);
+            }
+        </style>
+
+        <div header>Toggle dates and times that you are <b>unable</b> to work:</div>
+        <div class="date-container">
+            <div class="date-container-justify">
+                <paper-toggle-button checked="{{initVal()}}">April 22nd</paper-toggle-button>    
+            </div>
+            <div>
+                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+            </div>
+        </div>      
+        <div class="date-container">
+            <div class="date-container-justify">
+                <paper-toggle-button checked="{{initVal()}}">April 29th</paper-toggle-button>    
+            </div>
+            <div>
+                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+            </div>
+        </div>       
+        <div class="date-container">
+            <div class="date-container-justify">
+                <paper-toggle-button checked="{{initVal()}}">May 6th</paper-toggle-button>    
+            </div>
+            <div>
+                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+            </div>
+        </div>       
+        <div class="date-container">
+            <div class="date-container-justify">
+                <paper-toggle-button checked="{{initVal()}}">May 13th</paper-toggle-button>    
+            </div>
+            <div>
+                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+            </div>
+        </div>       
+        <div class="date-container">
+            <div class="date-container-justify">
+                <paper-toggle-button checked="{{initVal()}}">May 20th</paper-toggle-button>    
+            </div>
+            <div>
+                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+            </div>
+        </div>       
+    </template>
+
+    <script>
+        Polymer({
+            is: 'volunteer-dates',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<volunteer-dates></volunteer-dates>",
+                },
+                data: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            initVal: function() {
+                if (this.data===undefined) {
+                    return true;
+                }                
+            }
+        });
+    </script>
+</dom-module>

@@ -117,8 +117,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.$.contactForm.data = e.detail.data;
             },
             openVolunteer: function() {
-                this.$.contactForm.showVolunteer = true;
-                this.$.contactDrawer.openDrawer();
+                this.fire("volunteer");
+//                this.$.contactForm.showVolunteer = true;
+//                this.$.contactDrawer.openDrawer();
             },
             saveContact: function(e) {
                 var vData = {
