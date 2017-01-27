@@ -65,20 +65,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         
         <firebase-document id="preferencesDoc" 
                            app-name="registration-app" 
-                           path="/family-profile/[[userId]]/volunteer-preferences/" data="{{preferences}}"> </firebase-document>
+                           path="/family-profile/[[userId]]/volunteer-preferences" data="{{data}}"> </firebase-document>
         
         <paper-drawer-panel id="preferencesDrawer" 
                             right-drawer
                             force-narrow
                             disable-swipe
                             drawer-width="360px;">
-            <div main id="main-panel">                
-<!--                <div class="card-flex">-->
+            <div main id="main-panel">               
                     <paper-card>
                         <div header>Please Select a Volunteer Option</div>
                         <div class="list-container option-container">
                             <paper-checkbox id="buyoutOption"
-                                            checked="{{data.volunteerPref.buyoutOption}}">
+                                            checked="{{data.buyoutOption}}"
+                                            on-change="updateBuyout">
                                 <paper-item>
                                     <paper-item-body two-line>
                                         <div>$35 Volunteer Buyout Option</div>
@@ -91,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             <div>
                                 <paper-checkbox id="fieldSetUp"
-                                                checked="{{data.volunteerPref.fieldSetup}}">
+                                                checked="{{data.fieldSetup}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Field Set-Up</div>
@@ -102,7 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </div>
                             <div>
                                 <paper-checkbox id="fieldTakeDown"
-                                                checked="{{data.volunteerPref.fieldTakeDown}}">
+                                                checked="{{data.fieldTakeDown}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Field Take Down</div>
@@ -113,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </div>
                             <div>
                                 <paper-checkbox id="refereeAid"
-                                                checked="{{data.volunteerPref.refereeAid}}">
+                                                checked="{{data.refereeAid}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Referee Aide</div>
@@ -124,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </div>
                             <div>
                                 <paper-checkbox id="concessions"
-                                                checked="{{data.volunteerPref.concessions}}">
+                                                checked="{{data.concessions}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Referee Aide</div>
@@ -135,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </div>
                             <div>
                                 <paper-checkbox id="coach"
-                                                checked="{{data.volunteerPref.coach}}">
+                                                checked="{{data.coach}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Coach</div>
@@ -146,7 +146,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </div>
                             <div>
                                 <paper-checkbox id="astCoach"
-                                                checked="{{data.volunteerPref.astCoach}}">
+                                                checked="{{data.astCoach}}">
                                     <paper-item>
                                         <paper-item-body two-line>
                                             <div>Assistant Coach</div>
@@ -159,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>  
                         <div class="option-container">
                             <paper-checkbox id="multipleTeams"
-                                            checked="{{data.volunteerPref.moreThanOneTeam}}">
+                                            checked="{{data.moreThanOneTeam}}">
                                 <paper-item>
                                     <paper-item-body>
                                         <div>Coaching more than one team</div>
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div class="option-container">
                             <paper-dropdown-menu id="shirtSize"
                                                  label="T-Shirt Size"
-                                                 value="{{data.volunteerPref.shirtSize}}">
+                                                 value="{{data.shirtSize}}">
                                 <paper-listbox class="dropdown-content">
                                     <paper-item>Small (34-36)</paper-item>
                                     <paper-item>Medium (38-40)</paper-item>
@@ -200,14 +200,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: "<rec-soccer-volunteer-preferences></rec-soccer-volunteer-preferences>",
                 },
-                preferences: {
+                data: {
                     type: Object,
                     notify: true
+                },
+                userId: {
+                    type: String
                 }
-            },
+            },            
+            
+//            ready: function() {
+//                console.log(this.data);
+//            },
             openDrawer: function() {
                 this.$.preferencesDrawer.openDrawer();
-            }
+            },
+//            updateBuyout: function(e) {
+//                if (e.currentTarget.checked) {
+//                    this.$.fieldSetUp.disabled = true;
+//                }
+//            }
         });
     </script>
 </dom-module>
