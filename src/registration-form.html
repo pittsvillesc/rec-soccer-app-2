@@ -26,19 +26,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="registration-form">
     <template>
         <style include="shared-styles">
+            @media screen and (min-height: 900px) {
+                paper-dialog-scrollable {
+                    min-height: 800px;    
+                }
+                
+            }
+            @media screen and (min-height: 750px) and (max-height: 900px){
+                paper-dialog-scrollable {
+                    min-height: 650px;    
+                }
+            }
+            @media screen and (max-height: 750px) {
+                paper-dialog-scrollable {
+                    min-height: 500px;    
+                }
+            }
+            
             :host {
                 display: block;
                 padding: 10px;
+            }
+            .blast-full {
+                width: 100vw;
+                position: relative;
+                left: 50%;
+                right: 50%;
+                top: 0;
+                bottom: 0;
+                height: 100%;
+                margin-left: -50vw;
+                margin-right: -50vw;
+                
             }
             section {
                 width: inherit;                
                             
                 @apply(--layout-vertical);
-            }
-            section paper-dialog-scrollable {
-                min-height: 500px;    
-/*                @apply(--layout-flex);*/
-            }
+            }            
             .scrollable-div {
                 
                 @apply(--layout-flex);
@@ -71,6 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             paper-dropdown-menu {
                 width: 100%;
             }
+            
         </style>
         
         
@@ -123,18 +149,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <paper-dropdown-menu id="grade"
                                                  label="Grade at start of season"
                                                  value="{{data.grade}}">
-                                <paper-listbox class="dropdown-content">
-                                    <paper-item>Pre-Kindergarten</paper-item>
-                                    <paper-item>Kindergarten</paper-item>
-                                    <paper-item>1st Grade</paper-item>
-                                    <paper-item>2nd Grade</paper-item>
-                                    <paper-item>3rd Grade</paper-item>
-                                    <paper-item>4th Grade</paper-item>
-                                    <paper-item>5th Grade</paper-item>
-                                    <paper-item>6th Grade</paper-item>
-                                    <paper-item>7th Grade</paper-item>
-                                    <paper-item>8th Grade</paper-item>
-                                    <paper-item>High School</paper-item>
+                                <paper-listbox class="dropdown-content"
+                                               attr-for-selected="label"
+                                               selected="{{data.grade}}">
+                                    <paper-item label="Pre-Kindergarten">Pre-Kindergarten</paper-item>
+                                    <paper-item label="Kindergarten">Kindergarten</paper-item>
+                                    <paper-item label="1st Grade">1st Grade</paper-item>
+                                    <paper-item label="2nd Grade">2nd Grade</paper-item>
+                                    <paper-item label="3rd Grade">3rd Grade</paper-item>
+                                    <paper-item label="4th Grade">4th Grade</paper-item>
+                                    <paper-item label="5th Grade">5th Grade</paper-item>
+                                    <paper-item label="6th Grade">6th Grade</paper-item>
+                                    <paper-item label="7th Grade">7th Grade</paper-item>
+                                    <paper-item label="8th Grade">8th Grade</paper-item>
+                                    <paper-item label="High School">High School</paper-item>
                                 </paper-listbox>
                             </paper-dropdown-menu>
 
@@ -143,13 +171,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <paper-dropdown-menu id="shirtSize"
                                                  label="T-Shirt Size"
                                                  value="{{data.shirtSize}}">
-                                <paper-listbox class="dropdown-content">
-                                    <paper-item>Youth Small</paper-item>
-                                    <paper-item>Youth Medium</paper-item>
-                                    <paper-item>Youth Large</paper-item>
-                                    <paper-item>Small</paper-item>
-                                    <paper-item>Medium</paper-item>
-                                    <paper-item>Large</paper-item>                                
+                                <paper-listbox class="dropdown-content"
+                                               attr-for-selected="label"
+                                               selected="{{data.shirtSize}}">
+                                    <paper-item label="Youth Small">Youth Small</paper-item>
+                                    <paper-item label="Youth Medium">Youth Medium</paper-item>
+                                    <paper-item label="Youth Large">Youth Large</paper-item>
+                                    <paper-item label="Small">Small</paper-item>
+                                    <paper-item label="Medium">Medium</paper-item>
+                                    <paper-item label="Large">Large</paper-item>                                
                                 </paper-listbox>
                             </paper-dropdown-menu>                                             
                         </div>
@@ -177,6 +207,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-button id="saveReg" on-tap="saveRegistration"><iron-icon icon="save"></iron-icon>Save</paper-button>
             </div>
         </section>
+        
     </template>
 
     <script>
@@ -189,16 +220,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 data: {
                     type: Object,
+                    notify: true
                     
                 }
             },
             saveRegistration: function() {
 //                console.info("Save Data:", this.data);
+//                console.info("Key", this.data.$key);
                 this.fire("saveRegistration", {
                     playerData: {
                         firstName: this.data.firstName,
                         lastName: this.data.lastName,
                         birthdate: this.data.birthdate,
+                        email: this.data.email,
                         school: this.data.school,
                         competitive: this.data.competitive,
                         isActive: this.data.isActive
@@ -210,10 +244,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         school: this.data.school,
                         competitive: this.data.competitive,
                         grade: this.data.grade,
+                        email: this.data.email,
                         shirtSize: this.data.shirtSize,
                         division: this.data.division,
                         acknowledgedConcussionInfo: this.data.acknowledgedConcussionInfo,
-                        acknowledgedWaiver: this.data.acknowledgedWaiver
+                        acknowledgedWaiver: this.data.acknowledgedWaiver,
+                        signerKey: this.data.signerKey,
+                        signedDate: this.data.signedDate,
+                        signerRelationship: this.data.signerRelationship
                     },
                     key: this.data.$key
                 });
@@ -222,10 +260,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.fire("close");
             },
             showConcussion: function() {
-                console.info("Concussion Info Opening");
+//                console.info("Concussion Info Opening");
+                if (this.$.concussionWaiver.checked) {
+                    this.fire("openConcussion");
+//                     this.$.concussionDialog.open();
+                }
             },
             showWaiver: function() {
-                console.info("Waiver Info Opening");
+                if (this.$.liabilityWaiver.checked) {
+                    this.fire("openWaiver", {
+                        firstName: this.data.firstName,
+                        lastName: this.data.lastName
+                    });
+                }
+            },
+            acknowledgeConcussion: function() {
+                this.data.acknowledgedConcussionInfo = true;
             }
         });
     </script>

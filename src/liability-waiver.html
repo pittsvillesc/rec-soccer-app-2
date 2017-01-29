@@ -1,0 +1,178 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="liability-waiver">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+                --paper-card-header-text: {
+                    font-size: 1.17em;
+                    color: #547E8C;    
+                    font-weight: bold;
+                }
+            }
+            .sub-card-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-wrap);
+                @apply(--layout-around-justified);
+            }
+            .sub-card {
+                margin: 4px;
+                width: 300px;
+            }
+            .main-card {
+                margin: 8px;
+/*                max-width: 956px;*/
+                width: 100%;
+            }
+            b {
+                color: #547E8C;
+            }
+            .dialog-input-container {
+                @apply(--layout-horizontal);
+            }
+/*
+            @media screen and (min-width: 1150px) {
+                .main-card {
+                    width: 990px;
+                }
+            }
+            @media screen and (min-width: 850px) and (max-width: 1150px) {
+                .main-card {
+                    width: 660px;
+                }
+            }
+            @media screen and (min-width: 600px) and (max-width: 850px) {
+                .main-card {
+                    width: 330px;
+                }
+            }
+*/
+                
+            
+            
+        </style>
+        <firebase-query id="contactQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/family-contacts" 
+                        data="{{guardians}}"></firebase-query>
+        <paper-card class="main-card">
+            <div class="card-content">
+                <p>
+                    I, <b>{{firstName}} {{lastName}}</b>, on behalf of myself, my estate or heirs and any other person who may 
+                    have a claim as a result of my death, injury or disability (all hreinafter "Releasor"), hereby FOREVER RELEASE, 
+                    DISCHARGE AND COVENANT NOT TO SUE Rapids Area Soccer, Inc. and any of its directors, officers, employees, 
+                    insurers and agents (all hereinafter "Releasee") , from any and all liabilities, claims, demands, or causes 
+                    of action that I may hereafter have for injuries or damages arising out of my participation in soccer, but 
+                    not limited to losses caused by the passive or active negligence of the Releasee.
+                </p>
+                <p>
+                    Releasor understands and acknowledges that the activities of soccer have inherent dangers that cannot be 
+                    eliminated.  RELEASOR EXPRESSLY AND VOLUNTARILY ASSUMES ALL RISK OF PERSONAL INJURY, PERMANENT DISABILITY 
+                    OR DEATH sustained while participating in soccer including the risk of passive or active negligence of the 
+                    Releasee or any other participant.
+                </p>
+                <p>
+                    Releasor acknowledges and fully understands that each participant, including Releasor, will be engaging in 
+                    activities that involve risk of serious injury, including permanent disability and death, and that social 
+                    and economic losses may result not only from Releasor's own actions, inactions or negligence, but also from 
+                    the actions, inactions or negligence of others notwithstanding the rules of play or the condition of the 
+                    premises and any equipment used.  Risks associated with the activities of soccer include but are not limited 
+                    to soccer.  Further, Releasor acknowledges and fully understands that there may be other risks not known 
+                    or not reasonably foreseeable at this time.
+                </p>
+                <p>
+                    This agreement is for the current season only.
+                </p>
+                <h2>Do not acknowledge and exit unless you have read this agreement</h2>
+                <p>
+                    The undersigned,
+                    <paper-dropdown-menu id="selGuardian">
+                        <paper-listbox class="dropdown-content"                                       
+                                    on-iron-select="setGuardian">
+                            <template is="dom-repeat" items="{{guardians}}" as="guardian">
+                                <paper-item name="{{guardian.$key}}">{{guardian.firstName}} {{guardian.lastName}}</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu> 
+                    <b>{{pFirstName}} {{pLastName}}</b>, does hereby represent that he/she is of <b>{{firstName}}
+                    {{lastName}}</b> and, acting in such capacity, agrees to the terms and conditions of the above stated waiver 
+                    and release.<br/>                    
+                </p>
+                <h3>Youth Concussion Law</h3>
+                <p>
+                    I agree that I have received and read the concussion sheet and will discuss it with my child, the soccer 
+                    participant.  I understand if it appears that the participant may have sustained a concussion or head injury 
+                    that he/she is to be removed from the competition until such time that a trained medical professional can 
+                    examine the participant and approve his/her return to play soccer.  In such case, I understand that I am 
+                    to provide a written clearance for my participant to return to play soccer.
+                </p>
+                <div>
+                    <paper-checkbox checked="{{checkedSignature}}">Check this box to acknowledge you read and understand this agreement</paper-checkbox>
+                    
+                </div>
+                <div class="dialog-input-container">
+                    <paper-input label="Relationship to Minor"
+                                 value="{{relationshipToMinor}}">{{relationshipToMinor}}</paper-input>
+                    <vaadin-date-picker id="signedDate"
+                                        value="{{signatureDate}}"
+                                        no-label-float
+                                        placeholder="Date"></vaadin-date-picker>
+                </div>
+            </div>
+        </paper-card>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'liability-waiver',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<concussion-info></concussion-info>",
+                },
+                firstName: {
+                    type: String
+                },
+                lastName: {
+                    type: String
+                },
+                gKey: {
+                    type: String,
+                    value: ""
+                },
+                checkedSignature: {
+                    type: Boolean
+                },
+                signatureDate: {
+                    type: String
+                },
+                relationshipToMinor: {
+                    type: String
+                }
+            },
+            setGuardian: function(e) {
+                this.gKey = e.detail.item.name;
+            }
+        });
+    </script>
+</dom-module>

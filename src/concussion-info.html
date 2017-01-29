@@ -1,0 +1,186 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="concussion-info">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+                --paper-card-header-text: {
+                    font-size: 1.17em;
+                    color: #547E8C;    
+                    font-weight: bold;
+                }
+            }
+            .sub-card-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-wrap);
+                @apply(--layout-around-justified);
+            }
+            .sub-card {
+                margin: 4px;
+                width: 300px;
+            }
+            .main-card {
+                margin: 8px;
+/*                max-width: 956px;*/
+                width: 100%;
+            }
+            b {
+                color: #547E8C;
+            }
+/*
+            @media screen and (min-width: 1150px) {
+                .main-card {
+                    width: 990px;
+                }
+            }
+            @media screen and (min-width: 850px) and (max-width: 1150px) {
+                .main-card {
+                    width: 660px;
+                }
+            }
+            @media screen and (min-width: 600px) and (max-width: 850px) {
+                .main-card {
+                    width: 330px;
+                }
+            }
+*/
+                
+            
+            
+        </style>
+
+        <paper-card heading="How Can I Recognize a Possible Concussion?" 
+                    class="main-card">
+            <div class="card-content sub-card-container">
+                <paper-card class="sub-card"
+                            elevation="2">
+                    <div class="card-content">
+                        <b>Watch your athletes for:</b>
+                        <ol>
+                            <li>A forceful bump, blow, or jolt to the head or body that results in rapid movement of the head.</li>
+                            <li>Any change in the athlete's behavior, thinking or physical functioning.</li>
+                        </ol>
+                        <p>
+                            Athletes who experience <b>any</b> of the signs and symptoms listed below after a bump, blow, or jolt to the head or 
+                            body should be kept out of play the day of the injury and until a health care professional, experienced in
+                            evaluating for concussion, says they are symptom free and it's OK to return to play.
+                        </p>
+                    </div>
+                </paper-card>
+                <paper-card class="sub-card"
+                            elevation="2">
+                    <div class="card-content">
+                        <b>Coaching Staff Observes Player:</b>
+                        <ul>
+                            <li>Appears dazed or stunned</li>
+                            <li>Is confused about assignment or position</li>
+                            <li>Forgets an instruction</li>
+                            <li>Is unsure of game, score, or opponent</li>
+                            <li>Moves clumsily</li>
+                            <li>Answers questions slowly</li>
+                            <li>Loses consiousness (even briefly)</li>
+                            <li>Shows mood, behavior, or personality changes</li>
+                            <li>Can't recall events <em>prior</em> to contact</li>
+                            <li>Can't recall events <em>after</em> contact</li>
+                        </ul>
+                    </div>
+                </paper-card>
+                <paper-card class="sub-card"
+                            elevation="2">     
+                    <div class="card-content">
+                        <b>Athlete reports the following symptoms:</b>
+                        <ul>
+                            <li>Headache or "pressure" ini head</li>
+                            <li>Nausea or vomiting</li>
+                            <li>Balance problems or dizziness</li>
+                            <li>Double or blurry vision</li>
+                            <li>Sensitivity to light</li>
+                            <li>Sensitivity to noise</li>
+                            <li>Feeling sluggish, hazy, foggy, or groggy</li>
+                            <li>Concentration or memory problems</li>
+                            <li>Confusion</li>
+                            <li>Does not "feel right" or is "feeling down"</li>                    
+                        </ul>
+                        <p>
+                            Remember, you can't see a concussion and some athletes may not experience and/or report symptoms until
+                            hours or days after the injury.  Most people with a concussion will recover quickly and fully.  But for some
+                            people, signs and symptoms of concussion can last for days, weeks, or longer.
+                        </p>
+                    </div>
+                </paper-card>
+            </div>
+        </paper-card>
+        <paper-card class="main-card" 
+                    heading="What Should I do If a Concussion Occurs?">
+            <div class="card-content">
+                <ol>
+                    <li>
+                        <p><b>Remove the athlete from play.</b></p>
+                        <p>Look for signs and symptoms of a concussion if your athlete has experienced a bump or blow to the head or body.  
+                            When in doubt, keep athlete out of play</p>
+                    </li>
+                    <li>
+                        <p><b>Ensure tthat the athlete is evaluated by a health care professional experienced in evaluating for concussion.</b></p>
+                        <p>
+                            Do not try to judge the severity of the injury yourself.  Health care professionals have a number of methods that they 
+                            can use to assess the severity of concussions.  As a coach, review the information below to be able to help the health care
+                            professionals in assessing the athlete after the injury.
+                        </p>
+                    </li>
+                    <li>
+                        <p><b>Inform the athlete's parents or guardians about the possible concussion and give them the fact sheet on concussion.</b></p>
+                        <p>Make sure they know that the athlete should be seen by a health care professional experienced in evaluating concussions.</p>
+                    </li>
+                    <li>
+                        <p><b>Keep the athlete out of play the day of the injury and until a health care professional, experienced in evaluating 
+                            for concussion, says they are symptom free and it's OK to return to play.</b></p>
+                        <p>
+                            A repeat concussion that occurs before the brain recovers from the initial concussion - usually within a short period of 
+                            time (hours, days, or weeks) - can slow recovery or increase the likelihood of having longterm problems.  In rare cases,
+                            repeat concussions can result in edema (brain swelling), permanent brain damage, and even death.
+                        </p>
+                    </li>
+                </ol>
+                <b>Information to record in the event of a possible concussion:</b>
+                <ul>
+                    <li>Cause of the injury and force of the hit or blow to the head or body</li>
+                    <li>Any loss of consciousness (passed out/knocked out) and if so, for how long</li>
+                    <li>Any memory loss immediately following the injury</li>
+                    <li>Any seizures immediately following the injury</li>
+                    <li>Number of previous known concussions (if any)</li>
+                </ul>
+            </div>
+        </paper-card>
+        <paper-card class="main-card">
+            <div class="card-content">
+                <p><em>Content Source: <a href="www.cdc.gov/Concussion">Centers for Disease Control and Prevention, National Center for Injury Prevention and Control</a></em></p>
+            </div>
+        </paper-card>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'concussion-info',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<concussion-info></concussion-info>",
+                },
+            }
+        });
+    </script>
+</dom-module>

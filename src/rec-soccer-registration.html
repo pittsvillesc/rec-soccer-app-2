@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 
+
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="rec-soccer-list.html">
 <link rel="import" href="registration-form.html">
@@ -55,7 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         data="{{registrationData}}"></firebase-query>
         <firebase-document id="regDoc" 
                            app-name="registration-app" 
-                           path="/family-profile/[[userId]]/current-registrations/{{currentRegistration}}" data="{{selectedReg}}"> </firebase-document>
+                           path="/family-profile/[[userId]]/current-registrations/{{current-season}}/{{currentRegistration}}" data="{{selectedReg}}"> </firebase-document>
         <firebase-document id="playerDoc" 
                            app-name="registration-app" 
                            path="/family-profile/[[userId]]/player-profile/{{currentRegistration}}" data="{{playerData}}"> </firebase-document>
@@ -76,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div>{{currentSeason}} Registration</div>
                     </paper-item>
                 </rec-soccer-list>
-                <paper-button id="checkout" class="add-item">
+                <paper-button id="checkout" class="add-item" on-tap="completeRegistration">
                     
                     <div><iron-icon icon="payment"></iron-icon></div>
 
@@ -87,11 +88,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div drawer>
                 
-                <registration-form id="regForm">
+                <registration-form id="regForm" data="{{selectedReg}}">
                     
                 </registration-form>
             </div>
         </paper-drawer-panel>
+        
+        
     </template>
 
     <script>
@@ -116,68 +119,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 playerData: {
                     type: Object,
                     notify: true
+                },
+                currentSeason: {
+                    type: String
                 }
             },
             listeners: {
                 "check": "setRegistration",
+                "uncheck": "setToInactive",
                 "close": "closeDrawer",
                 "openDrawer": "openDrawer",
-                "saveRegistration": "updateRegistration"
+                "saveRegistration": "updateRegistration",
+                "onbeforeunload": "refresh"
+//                "openConcussion": "openConcussion"
             },
             setRegistration: function(e) {
-                var vChecked = e.detail.checked;
-                var vHoldRegData = {
+                this.currentRegistration = e.detail.data.$key;
+                var defaultReg = {
                     birthdate: e.detail.data.birthdate,
                     competitive: e.detail.data.competitive,
                     firstName: e.detail.data.firstName,
                     lastName: e.detail.data.lastName,
                     school: e.detail.data.school,
+                    email: e.detail.data.email,
                     grade: "",
                     shirtSize: "",
                     division: "",
                     acknowledgedConcussionInfo: false,
-                    acknowledgedWaiver: false
-                };
-                var vHoldPlayerData = {
+                    acknowledgedWaiver: false,
+                    signerKey: "",
+                    signedDate: "",
+                    signerRelationship: "",
+                }
+                
+//                this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/" + this.currentRegistration;                
+//                this.$.playerDoc.path = "/family-profile/" + this.userId + "/player-profile/" + this.currentRegistration;
+                this.$.regDoc.data = defaultReg;
+                this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/", this.currentRegistration);
+                e.detail.data.isActive = true;
+                this.$.playerDoc.data = {
                     birthdate: e.detail.data.birthdate,
                     competitive: e.detail.data.competitive,
+                    email: e.detail.data.email,
                     firstName: e.detail.data.firstName,
                     lastName: e.detail.data.lastName,
                     school: e.detail.data.school,
-                    isActive: e.detail.data.isActive
+                    isActive: true
                 }
-                
-                this.currentRegistration = e.detail.data.$key;
-                
-                if (vChecked) {
-                    var exists = true;
-                    this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + e.detail.data.$key + "/";
-                    exists = !this.$.regDoc.zeroValue;
-                    if (!exists) {
-                        this.$.regDoc.data = vHoldRegData;
-                        this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.data.$key);
-                        vHoldPlayerData.isActive = true;
-                        this.$.playerDoc.data = vHoldPlayerData;
-                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
-                    } else {
-                        this.$.regDoc.data = vHoldRegData;
-                        this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.data.$key);
-                        vHoldPlayerData.isActive = true;
-                        this.$.playerDoc.data = vHoldPlayerData;
-                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
-                    }
-                    this.$.regForm.data = this.$.regDoc.data;
-                    this.$.regDrawer.openDrawer();
-                } else {
-                          this.$.regDoc.path = "/family-profile/" + this.userId + "/player-profile/" + e.detail.data.$key + "/";
-                        vHoldPlayerData.isActive = false;
-                        this.$.playerDoc.data = vHoldPlayerData;
-                        this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);
-                }
+                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", this.currentRegistration);                
+                this.$.regForm.data = this.$.regDoc.data;
+                this.$.regDrawer.openDrawer();
+//                var vHoldData = this.$.playerDoc.data;
+//                vHoldData.isActive = true;
+//                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.data.$key);                
             },
             updateRegistration: function(e) {
                 var vHoldRegData = {
                     birthdate: e.detail.playerData.birthdate,
+                    email: e.detail.playerData.email,
                     competitive: e.detail.playerData.competitive,
                     firstName: e.detail.playerData.firstName,
                     lastName: e.detail.playerData.lastName,
@@ -186,7 +185,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     shirtSize: (e.detail.regData.shirtSize) ? e.detail.regData.shirtSize : "",
                     division: (e.detail.regData.division) ? e.detail.regData.division : "",
                     acknowledgedConcussionInfo: (e.detail.regData.acknowledgedConcussionInfo) ? true : false,
-                    acknowledgedWaiver: (e.detail.regData.acknowledgedWaiver) ? true : false
+                    acknowledgedWaiver: (e.detail.regData.acknowledgedWaiver) ? true : false,
+                    signerKey: e.detail.regData.signerKey,
+                    signedDate: e.detail.regData.signedDate,
+                    signerRelationship: e.detail.regData.signerRelationship,
                 };
                 var vHoldPlayerData = {
                     birthdate: e.detail.playerData.birthdate,
@@ -194,21 +196,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     firstName: e.detail.playerData.firstName,
                     lastName: e.detail.playerData.lastName,
                     school: e.detail.playerData.school,
-                    isActive: e.detail.playerData.isActive
+                    email: e.detail.playerData.email,
+                    isActive: true
                 };
                 this.$.regDoc.data = vHoldRegData;
                 this.$.playerDoc.data = vHoldPlayerData;
-                this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/", e.detail.key);
-                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.key);
+                this.$.regDoc.save("/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/", this.currentRegistration);
+                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", this.currentRegistration);
                 this.closeDrawer();
             },
             openDrawer: function(e) {
                 this.currentRegistration = e.detail.data.$key;
+                this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/" + e.detail.data.$key;
+                this.$.regForm.data = this.$.regDoc.data;
                 this.$.regDrawer.openDrawer();
-                this.$.regForm.data = e.detail.data;
             },
             closeDrawer: function() {
                 this.$.regDrawer.closeDrawer();
+            },
+//            openConcussion: function() {
+//                this.fire("openConcussion");
+//            },
+            acknowledgeConcussion: function() {
+                this.$.regForm.data.acknowledgedConcussionInfo = true;
+            },
+            acknowledgeWaiver: function(obj) {
+                this.$.regForm.data.acknowledgedWaiver = obj.isSigned;
+                this.$.regForm.data.signerKey = obj.key;
+                this.$.regForm.data.signedDate = obj.date;
+                this.$.regForm.data.signerRelationship = obj.relationship;
+            },
+            setToInactive: function() {
+                console.log("Set to inactive");
+            },
+            refresh: function() {
+                this.page = "home";
+            },
+            completeRegistration: function() {
+                this.fire("openVerification");
             }
         });
     </script>

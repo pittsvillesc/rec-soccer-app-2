@@ -105,19 +105,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.$.playerForm.data = e.detail.data;
             },
             savePlayer: function(e) {
-                var vData = {
-                    firstName: "",
-                    lastName: "",
+                var vPlayerData = {
+                    firstName: e.detail.firstName,
+                    lastName: e.detail.lastName,
                     birthdate: "",
                     school: "",                    
                     email: "",
                     competitive: false,
-                    isActive: true
-                };                
-                vData.firstName = e.detail.firstName;
-                vData.lastName = e.detail.lastName;
-                this.selectedPlayer = vData;
-                this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/");
+                    isActive: false,                    
+                };  
+                this.$.playerDoc.data = vPlayerData;
+                var vPlayerDoc = this.$.playerDoc;
+                var vPlayerKey = this.selectedPlayer;
+                var pSavePlayer = vPlayerDoc.save("/family-profile/" + this.userId + "/player-profile/");
             },
             updatePlayer: function(e) {
                 this.selectedPlayer = e.detail.data;   
@@ -125,10 +125,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.$.playerDrawer.closeDrawer();
             },
             showData: function() {
-                this.fire("showData");
+//                this.fire("showData");
             },
             showFirebaseData: function(e) {
-                console.info("Firebase Data:", this.$.playerQuery);
+//                console.info("Firebase Data:", this.$.playerQuery);
             },
             closeDrawer: function() {
                 this.$.playerDrawer.closeDrawer();

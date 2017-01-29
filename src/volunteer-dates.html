@@ -9,7 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html"
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="volunteer-dates">
@@ -20,8 +21,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 padding: 10px;
             }
             paper-toggle-button {
-                --paper-toggle-button-checked-button-color: var(--app-primary-color);
-                --paper-toggle-button-checked-bar-color: #B0C4CB;
+                --paper-toggle-button-checked-button-color: red;
+                --paper-toggle-button-checked-bar-color: red;
+                --paper-toggle-button-unchecked-button-color: var(--app-primary-color);
+                --paper-toggle-button-unchecked-bar-color: #CDDBDE;
             }
             .date-container {
                 @apply(--layout-horizontal);
@@ -43,56 +46,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 @apply(--layout-self-center);
             }
         </style>
-
-        <div header>Toggle dates and times that you are <b>unable</b> to work:</div>
+        <firebase-document id="roDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/volunteer-preferences/requestDates" data="{{data}}" zeroData="{{defaultData}}"> </firebase-document>
+        <div header on-tap="showData">Toggle dates and times that you are <b>unable</b> to work:</div>
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button checked="{{initVal()}}">April 22nd</paper-toggle-button>    
+                <paper-toggle-button spec-date="1" checked="{{data.matchDate1.date}}">April 22nd</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1.time.a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1.time.b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1.time.c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>      
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button checked="{{initVal()}}">April 29th</paper-toggle-button>    
+                <paper-toggle-button date="2" on-change="updateDate" checked="{{data.matchDate2.date}}">April 29th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2.time.a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2.time.b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2.time.c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button checked="{{initVal()}}">May 6th</paper-toggle-button>    
+                <paper-toggle-button date="3" on-change="updateDate" checked="{{data.matchDate3.date}}">May 6th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3.time.a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3.time.b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3.time.c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button checked="{{initVal()}}">May 13th</paper-toggle-button>    
+                <paper-toggle-button date="4" on-change="updateDate" checked="{{data.matchDate4.date}}">May 13th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4.time.a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4.time.b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4.time.c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button checked="{{initVal()}}">May 20th</paper-toggle-button>    
+                <paper-toggle-button date="5" on-change="updateDate" checked="{{data.matchDate5.date}}">May 20th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button checked="{{initVal()}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button checked="{{initVal()}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5.time.a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5.time.b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5.time.c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
     </template>
@@ -108,12 +113,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 data: {
                     type: Object,
                     notify: true
+                },
+                defaultData: {
+                    type: Object,
+                    notify: true,
+                    value: {
+                        matchDate1: {
+                            date: false,
+                            time: {
+                                a: false,
+                                b: false,
+                                c: false
+                            }
+                        },
+                        matchDate2: {
+                            date: false,
+                            time: {
+                                a: false,
+                                b: false,
+                                c: false
+                            }
+                        },
+                        matchDate3: {
+                            date: false,
+                            time: {
+                                a: false,
+                                b: false,
+                                c: false
+                            }
+                        },
+                        matchDate4: {
+                            date: false,
+                            time: {
+                                a: false,
+                                b: false,
+                                c: false
+                            }
+                        },
+                        matchDate5: {
+                            date: false,
+                            time: {
+                                a: false,
+                                b: false,
+                                c: false
+                            }
+                        },
+                    }
                 }
+            },
+            listeners: {
+                "change": "updateDate"
             },
             initVal: function() {
                 if (this.data===undefined) {
                     return true;
                 }                
+            },
+            showData: function() {
+                console.log(this.data);
+            },
+            updateDate: function(e) {
+                console.log(e.target.specDate);
             }
         });
     </script>

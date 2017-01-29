@@ -6,7 +6,8 @@
     "src/rec-soccer-players.html",
     "src/rec-soccer-registration.html",
     "src/rec-soccer-view404.html",
-    "src/rec-soccer-volunteer-preferences.html"
+    "src/rec-soccer-volunteer-preferences.html",
+    "src/rec-soccer-reg-verification.html"   
   ],
   "sourceGlobs": [
     "src/**/*",

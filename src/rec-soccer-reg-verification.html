@@ -1,0 +1,278 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-contact/paper-contact.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="paypal-button.html">
+<dom-module id="rec-soccer-reg-verification">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+            @media screen and (min-width: 560px) {
+                .summary-container {
+                    @apply(--layout-horizontal);
+                }
+            }
+            @media screen and (max-width: 560px) {
+                .summary-container {
+                    @apply(--layout-horizontal-wrap);
+                }   
+            }
+            .paper-body-detail-container {
+                @apply(--layout-horizontal);
+            }
+            .paper-body-detail-container > div {
+                margin-right: 14px;
+            }
+            .reg-detail {
+                @apply(--layout-horizontal);
+            }
+            .detail-flex {
+                @apply(--layout-flex);
+            }
+            .checkout-buttons {
+                --paper-button: {
+                    background-color: var(--app-primary-color);
+                    color: #fff;
+                    height: 65%;
+                }
+            }
+        </style>
+       <firebase-query id="contactQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/family-contacts" 
+                        data="{{contactData}}"></firebase-query>
+        <firebase-query id="regQuery" 
+                        app-name="registration-app" 
+                        path="/family-profile/{{userId}}/current-registrations/{{currentSeason}}" 
+                        data="{{regData}}"
+                        on-attribute-changed="regDataChanged"></firebase-query>
+        <firebase-document id="verDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]" data="{{profileData}}"> </firebase-document>
+        
+        
+         <!-- primary contact -->
+        <div class="primary-container">
+            <paper-card heading="Registration Summary" on-tap="showData">                
+                
+                &nbsp;&nbsp;&nbsp;<em>Refresh to see changes made in your current session</em>
+                <div class="card-content">
+                    <div class="summary-container">
+                        <div>
+                            <template is="dom-repeat" items="{{contactData}}" as="contact" filter="showContact">
+                                <div>                                
+                                    <b>{{contact.firstName}} {{contact.lastName}}</b>
+                                    <paper-contact-list>
+                                        <paper-contact-phone label="{{contact.homePhone}}">+1-{{contact.homePhone}}</paper-contact-phone>
+                                        <paper-contact-mobile>+1-{{contact.mobilePhone}}</paper-contact-mobile>
+                                        <paper-contact-email>{{contact.email}}</paper-contact-email>
+                                        <paper-contact-address>{{contact.streetAddress}} <template is="dom-if" if="{{hasAppt(contact.aptNbr)}}">{{contact.aptNbr}}</template><br/>{{contact.city}}, WI<br/>{{contact.zip}}</paper-contact-address>
+                                    </paper-contact-list>
+                                </div>
+
+                            </template>
+                        </div>
+                        <div id="registrationDetails">
+                            <template is="dom-repeat" items="{{regData}}" as="reg">
+                                <paper-item class="reg-detail">
+                                    <paper-item-body two-line class="detail-flex">
+                                        <div>{{reg.firstName}} {{reg.lastName}}</div>
+                                        <div secondary class="paper-body-detail-container">
+                                            <div>{{reg.grade}}</div>
+                                            <div>{{reg.division}}</div>
+                                            <div>shirt size: {{reg.shirtSize}}</div>
+                                        </div>
+                                    </paper-item-body>
+                                    <div>
+                                        $20 {{incrementTotal(20)}}
+                                    </div>
+                                </paper-item>
+                            </template>
+                            <template is="dom-if" if="{{profileData.volunteer-preferences.buyoutOption}}">
+                                <paper-item>
+                                    <paper-item-body class="detail-flex">Buyout Fee</paper-item-body>
+                                    <div>
+                                        $35 {{incrementTotal(35)}}
+                                    </div>
+                                </paper-item>
+                            </template>
+                            <template is="dom-if" if="{{(profileData.volunteer-preferences.astCoach || profileData.volunteer-preferences.coach)}}">
+                                <paper-item>
+                                    <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
+                                    <div>
+                                        -$20 {{incrementTotal(-20)}}
+                                    </div>
+                                </paper-item>
+                            </template>
+                            <template is="dom-if" if="{{profileData.volunteer-preferences.moreThanOneTeam}}">
+                                <paper-item>
+                                    <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
+                                    <div>
+                                        -$20 {{incrementTotal(-20)}}
+                                    </div>
+                                </paper-item>
+                            </template>
+                            <paper-item>
+                                <paper-item-body class="detail-flex"><b>Total Amount Due</b></paper-item-body>
+                                <div>
+                                    <b>${{totalDue}}.00</b>
+                                </div>
+                            </paper-item>
+                        </div>
+                    </div>   
+                    <div class="summary-container">
+                        <paypal-button class="checkout-buttons"
+                                       id="paypal"
+                                       total-due="0.01"
+                                       on-tap="setButtonId"></paypal-button>
+                        <paper-button class="checkout-buttons"
+                                      raised>I will send a check via U.S. Mail</paper-button>
+                    </div>
+                </div>
+            </paper-card>
+        </div>
+        <!-- breakdown of each reg with $-->
+        
+        <!-- adjustments (buyouts, coaching, board, etc) -->
+    </template>
+
+    <script>
+        Polymer({
+            is: 'rec-soccer-reg-verification',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<rec-soccer-reg-verification></rec-soccer-reg-verification>",
+                },
+                profileData: {
+                    type: Object,
+                },
+                contactData: {
+                    type: Array,
+                },
+                regData: {
+                    type: Array,
+                },
+                userId: {
+                    type: String,
+                },
+                totalDue: {
+                    type: String,
+                }
+            },
+            ready: function() {
+                console.log("IN READY");
+                var subtotal = 0.0;
+                console.log(this.regData[0]);
+                this.regData.forEach(function() {
+                    console.log("in for each");
+                    subtotal += 20;
+                })
+                this.totalDue = subtotal;
+            },
+            showContact: function(item) {
+//                console.info(item);
+                if (item.primaryContact) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            hasAppt: function(pApt) {
+                if (pApt === "") {
+                    return false;
+                } else {
+                    return true;
+                }                
+            },
+            coachingDiscount: function() {
+                console.log(this.profileData);
+                if (this.profileData.volunteerPreferences.astCoach || this.profileData.volunteerPreferences.coach)  {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            showData: function() {
+                console.info("Profile Data", this.profileData);
+                this.getTotalDue();
+            },
+            getTotalDue: function(data) {
+                var subtotal = 0.00
+                                                
+                subtotal = data.length * 20;
+                return subtotal;
+            },
+            incrementTotal: function(pVal) {
+                this.totalDue += pVal;
+                return "";
+            },
+            setButtonId: function() {
+                alert(this.totalDue);
+                switch(this.totalDue) {
+                    case "20":
+                       this.$.paypal.buttonId = "PJMFD8W2XHX46";
+                        break;
+                    case "40":
+                        this.$.paypal.buttonId = "ARLQAGSECFXEE";
+                        break;
+                    case "60":
+                        this.$.paypal.buttonId = "7YGFNHG96XENS";
+                        break;
+                    case "80":
+                        this.$.paypal.buttonId = "GSYG3BS77TV5Y";
+                        break;
+                    case "100":
+                        this.$.paypal.buttonId = "4HUUXCFCKJWAW";
+                        break;
+                    case "120":
+                        this.$.paypal.buttonId = "8WPWFEBTHUMZQ";
+                        break;
+                    case "55":
+                        this.$.paypal.buttonId = "R5QT3JUWKJCKE";
+                        break;
+                    case "75":
+                        this.$.paypal.buttonId = "FQBK68DJMEAUE";
+                        break;
+                    case "95":
+                        this.$.paypal.buttonId = "RENW4KPZ2KHWN";
+                        break;
+                    case "115":
+                        this.$.paypal.buttonId = "QTXUYKC5UM2QN";
+                        break;
+                    case "135":
+                        this.$.paypal.buttonId = "V4VH2DFGLQWSN";
+                        break;
+                    case "155":
+                        this.$.paypal.buttonId = "FNA3Q4EYELAR8";
+                        break;
+                    case "0.01":
+                        this.$.paypal.buttonId = "YWWBVDMAPXMMJ";
+                        break;
+                    default:
+                        this.$.paypal.buttonId = "YWWBVDMAPXMMJ";
+                        
+                }
+                alert("Id Set: " + this.$.paypal.buttonId);
+            }
+            
+        });
+    </script>
+</dom-module>
