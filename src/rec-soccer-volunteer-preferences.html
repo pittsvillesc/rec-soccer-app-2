@@ -22,6 +22,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <style include="shared-styles">
             :host {
                 display: block;
+/*                height: 100%;*/
+/*                overflow: auto;*/
 /*                padding: 10px;*/
             }
             paper-drawer-panel {
@@ -74,21 +76,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             drawer-width="360px;">
             <div main id="main-panel">               
                     <paper-card>
-                        <div header>Please Select a Volunteer Option</div>
                         <div class="list-container option-container">
-                            <paper-checkbox id="buyoutOption"
-                                            checked="{{data.buyoutOption}}"
-                                            on-change="updateBuyout">
-                                <paper-item>
-                                    <paper-item-body two-line>
-                                        <div>$35 Volunteer Buyout Option</div>
-                                        <div secondary>A $35 charge is added to the registration to <br />cover the required work hours.</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
+                            
+                            <div header>Please Select a Volunteer Option (select all that apply)</div>
                         </div>
-                        <div class="list-container option-container" >
-
+                        <div class="list-container option-container">
+                            <div>
+                                <paper-checkbox id="boardMember"
+                                                checked="{{data.boardMember}}">
+                                    <paper-item>
+                                        <paper-item-body>
+                                            <div>Currently Serving Board Member</div>
+                                        </paper-item-body>
+                                    </paper-item>
+                                </paper-checkbox>
+                            </div>
+                            <div>
+                                <paper-checkbox id="buyoutOption"
+                                                checked="{{data.buyoutOption}}"
+                                                on-change="updateBuyout">
+                                    <paper-item>
+                                        <paper-item-body two-line>
+                                            <div>$35 Volunteer Buyout Option</div>
+                                            <div secondary>A $35 charge is added to the registration to <br />cover the required work hours.</div>
+                                        </paper-item-body>
+                                    </paper-item>
+                                </paper-checkbox>
+                            </div>
+                        </div>
+                        <div class="list-container option-container" >                            
                             <div>
                                 <paper-checkbox id="fieldSetUp"
                                                 checked="{{data.fieldSetup}}">
@@ -187,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--                </div>                -->
             </div>
             <div drawer>  
-                <volunteer-dates user-id="{{userId}}"></volunteer-dates>
+                <volunteer-dates user-id="{{userId}}" data="{{data}}"></volunteer-dates>
             </div>
         </paper-drawer-panel>
     </template>
@@ -206,7 +222,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 userId: {
                     type: String
-                }
+                },
+//                useBuyout: {
+//                    type: Booean,
+//                    observer: "_disableVolunteerFields"
+//                }
             },            
             
 //            ready: function() {
@@ -215,11 +235,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             openDrawer: function() {
                 this.$.preferencesDrawer.openDrawer();
             },
-//            updateBuyout: function(e) {
-//                if (e.currentTarget.checked) {
-//                    this.$.fieldSetUp.disabled = true;
-//                }
-//            }
+            updateBuyout: function(e) {
+                if (this.data.buyoutOption) {
+                    this.$.fieldSetUp.disabled = true;
+                    this.$.fieldSetUp.checked = false;
+                    this.$.boardMember.disabled = true;
+                    this.$.boardMember.checked = false;
+                    this.$.fieldTakeDown.disabled = true;
+                    this.$.fieldTakeDown.checked = false;
+                    this.$.refereeAid.disabled = true;
+                    this.$.refereeAid.checked = false;
+                    this.$.concessions.disabled = true;
+                    this.$.concessions.checked = false;
+                    this.$.coach.disabled = true;
+                    this.$.coach.checked = false;
+                    this.$.astCoach.disabled = true;
+                    this.$.astCoach.checked = false;
+                    this.$.multipleTeams.disabled = true;
+                    this.$.multipleTeams.checked = false;
+                    this.$.shirtSize.disabled = true;
+                    this.$.shirtSize.value = "";
+                } else {
+                    this.$.fieldSetUp.disabled = false;
+                    this.$.boardMember.disabled = false;
+                    this.$.fieldTakeDown.disabled = false;
+                    this.$.refereeAid.disabled = false;
+                    this.$.concessions.disabled = false;
+                    this.$.coach.disabled = false;
+                    this.$.astCoach.disabled = false;
+                    this.$.multipleTeams.disabled = false;
+                    this.$.shirtSize.disabled = false;
+                }
+            },
+            updateboardMember: function() {
+                if (this.data.boardMember) {
+                    this.$.fieldSetUp.disabled = true;
+                    this.$.buyoutOption.disabled = true;
+                    this.$.fieldTakeDown.disabled = true;
+                    this.$.refereeAid.disabled = true;
+                    this.$.concessions.disabled = true;
+//                    this.$.coach.disabled = true;
+//                    this.$.astCoach.disabled = true;
+//                    this.$.multipleTeams.disabled = true;
+//                    this.$.shirtSize.disabled = true;
+                } else {
+                    this.$.fieldSetUp.disabled = false;
+                    this.$.buyoutOption.disabled = false;
+                    this.$.fieldTakeDown.disabled = false;
+                    this.$.refereeAid.disabled = false;
+                    this.$.concessions.disabled = false;
+//                    this.$.coach.disabled = false;
+//                    this.$.astCoach.disabled = false;
+//                    this.$.multipleTeams.disabled = false;
+//                    this.$.shirtSize.disabled = false;
+            
+                }
+            }
         });
     </script>
 </dom-module>

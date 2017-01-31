@@ -114,12 +114,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     competitive: false,
                     isActive: false,                    
                 };  
+                this.$.playerDoc.path = "/family-profile/" + this.userId + "/player-profile/";
                 this.$.playerDoc.data = vPlayerData;
                 var vPlayerDoc = this.$.playerDoc;
                 var vPlayerKey = this.selectedPlayer;
                 var pSavePlayer = vPlayerDoc.save("/family-profile/" + this.userId + "/player-profile/");
             },
             updatePlayer: function(e) {
+                this.$.playerDoc.path = "/family-profile/" + this.userId + "/player-profile/" + e.detail.key;
                 this.selectedPlayer = e.detail.data;   
                 this.$.playerDoc.save("/family-profile/" + this.userId + "/player-profile/", e.detail.key);
                 this.$.playerDrawer.closeDrawer();

@@ -96,7 +96,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             _onKeyPress: function(e) {
                 this.fire("saveName", {firstName: this.firstName, lastName: this.lastName});
-                console.info("First Name", this.firstName);
+                this.hasFocus = false;
+                this.$.piFirstName.value = "";
+                this.$.piLastName.value = "";
+//                this.fire("nameSaved");
+//                console.info("First Name", this.firstName);
             }
         });
     </script>

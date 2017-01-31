@@ -51,6 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     background-color: var(--app-primary-color);
                     color: #fff;
                     height: 65%;
+                    margin: 8px;
                 }
             }
         </style>
@@ -101,7 +102,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         </div>
                                     </paper-item-body>
                                     <div>
-                                        $20 {{incrementTotal(20)}}
+                                        <template is="dom-if" if="{{profileData.volunteer-preferences.boardMember}}">
+                                            $0 
+                                        </template>
+                                        <template is="dom-if" if="{{!profileData.volunteer-preferences.boardMember}}">
+                                            $20 {{incrementTotal(20,profileData.volunteer-preferences.boardMember)}}
+                                        </template>                                        
                                     </div>
                                 </paper-item>
                             </template>
@@ -109,23 +115,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <paper-item>
                                     <paper-item-body class="detail-flex">Buyout Fee</paper-item-body>
                                     <div>
-                                        $35 {{incrementTotal(35)}}
+                                        $35 {{incrementTotal(35,profileData.volunteer-preferences.boardMember)}}
                                     </div>
                                 </paper-item>
                             </template>
-                            <template is="dom-if" if="{{(profileData.volunteer-preferences.astCoach || profileData.volunteer-preferences.coach)}}">
+                            <template is="dom-if" if="{{showCoachingDiscount(profileData.volunteer-preferences.astCoach, profileData.volunteer-preferences.coach, profileData.volunteer-preferences.boardMember)}}">
                                 <paper-item>
                                     <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
                                     <div>
-                                        -$20 {{incrementTotal(-20)}}
+                                        -$20 {{incrementTotal(-20,profileData.volunteer-preferences.boardMember)}}
                                     </div>
                                 </paper-item>
                             </template>
-                            <template is="dom-if" if="{{profileData.volunteer-preferences.moreThanOneTeam}}">
+                            <template is="dom-if" if="{{showCoachingDiscount2(profileData.volunteer-preferences.moreThanOneTeam, profileData.volunteer-preferences.boardMember)}}">
                                 <paper-item>
                                     <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
                                     <div>
-                                        -$20 {{incrementTotal(-20)}}
+                                        -$20 {{incrementTotal(-20,profileData.volunteer-preferences.boardMember)}}
                                     </div>
                                 </paper-item>
                             </template>
@@ -138,12 +144,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>
                     </div>   
                     <div class="summary-container">
-                        <paypal-button class="checkout-buttons"
-                                       id="paypal"
-                                       total-due="0.01"
-                                       on-tap="setButtonId"></paypal-button>
-                        <paper-button class="checkout-buttons"
-                                      raised>I will send a check via U.S. Mail</paper-button>
+                        <template is="dom-if" if="{{showButtons(totalDue)}}">
+                            <paypal-button class="checkout-buttons"
+                                           id="paypal"
+                                           total-due="0.01"
+                                           on-tap="setButtonId"></paypal-button>
+                            <paper-button class="checkout-buttons"
+                                          raised
+                                          on-tap="completeUnpaidReg">I will send a check via U.S. Mail</paper-button>
+                        </template>
+                        <template is="dom-if" if="{{!showButtons(totalDue)}}">
+                            <paper-button class="checkout-buttons"
+                                          raised
+                                          on-tap="completeReg">Complete Registration</paper-button>
+                        </template>                        
                     </div>
                 </div>
             </paper-card>
@@ -163,30 +177,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 profileData: {
                     type: Object,
+                    notify: true
                 },
                 contactData: {
                     type: Array,
                 },
                 regData: {
                     type: Array,
+                    notify: true,
                 },
                 userId: {
                     type: String,
                 },
                 totalDue: {
                     type: String,
+                    value: "0"
                 }
             },
-            ready: function() {
-                console.log("IN READY");
-                var subtotal = 0.0;
-                console.log(this.regData[0]);
-                this.regData.forEach(function() {
-                    console.log("in for each");
-                    subtotal += 20;
-                })
-                this.totalDue = subtotal;
+            showButtons: function(pDue) {
+                if (pDue == "0") {
+                    return false;
+                }  else {
+                    return true;
+                }
             },
+            showCoachingDiscount: function(pCoach, pAst, pBoard) {
+                if (pBoard) {
+                    return false;
+                } else {
+                    if (pCoach || pAst) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            showCoachingDiscount2: function(pCoach, pBoard){
+                if (pBoard) {
+                    return false;
+                } else {
+                    return pCoach;
+                }
+            },
+//            ready: function() {
+//                var subtotal = 0.0;
+//                if (this.profileData.volunteer-preferences.boardMember) {
+//                    subtotal = 0.0;
+//                } else {
+//                    this.regData.forEach(function() {
+//                        subtotal += 20;
+//                    })
+//                    this.totalDue = subtotal;
+//                }
+//            },
             showContact: function(item) {
 //                console.info(item);
                 if (item.primaryContact) {
@@ -202,6 +245,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     return true;
                 }                
             },
+            
             coachingDiscount: function() {
                 console.log(this.profileData);
                 if (this.profileData.volunteerPreferences.astCoach || this.profileData.volunteerPreferences.coach)  {
@@ -212,20 +256,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             showData: function() {
                 console.info("Profile Data", this.profileData);
-                this.getTotalDue();
+//                this.getTotalDue();
             },
-            getTotalDue: function(data) {
-                var subtotal = 0.00
-                                                
-                subtotal = data.length * 20;
-                return subtotal;
-            },
-            incrementTotal: function(pVal) {
-                this.totalDue += pVal;
+            incrementTotal: function(pVal,pBoard) {
+                if (pBoard) {
+                    this.totalDue = "0";
+                } else {
+                    this.totalDue = parseInt(this.totalDue) + pVal;
+                    console.info("Incremented Total Due: ", this.totalDue);
+                }
                 return "";
             },
             setButtonId: function() {
-                alert(this.totalDue);
+//                alert(this.totalDue);
                 switch(this.totalDue) {
                     case "20":
                        this.$.paypal.buttonId = "PJMFD8W2XHX46";
@@ -270,7 +313,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.$.paypal.buttonId = "YWWBVDMAPXMMJ";
                         
                 }
-                alert("Id Set: " + this.$.paypal.buttonId);
+                this._completeRegistration("PayPal", false);
+//                alert("Id Set: " + this.$.paypal.buttonId);
+            },
+            completeReg: function() {
+//                console.info("Reg Data", this.regData);
+//                this.regData.forEach(function(item) {
+//                    console.info("Item",item);
+//                })
+                this._completeRegistration("no payment", true);  
+            },
+            completeUnpaidReg: function() {
+                this._completeRegistration("Check", false);  
+            },
+            _completeRegistration: function(pType,pPaid) {
+                this.regData.forEach(function(item) {
+                    item.paymentType = pType;
+                    item.paid = pPaid;
+                });
             }
             
         });

@@ -52,7 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         data="{{contactData}}"></firebase-query>
         <firebase-document id="contactDoc" 
                            app-name="registration-app" 
-                           path="/family-profile/[[userId]]/family-contacts/" data="{{selectedContact}}"> </firebase-document>
+                           path="/family-profile/[[userId]]/family-contacts/" data="[[selectedContact]]"> </firebase-document>
         <paper-drawer-panel id="contactDrawer" 
                             right-drawer
                             force-narrow
@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             drawer-width="360px;">
             <div main>
                 <rec-soccer-list id="contactList"
-                                 data="{{contactData}}"
+                                 data="[[contactData]]"
                                  add-text="Add new Family Contact"></rec-soccer-list>
                 
                 <paper-button id="checkout" class="add-item" on-tap="openVolunteer">
@@ -134,13 +134,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     email: "",
                     primaryContact: false
                 };
+//                console.info("vData before save", vData);
+//                console.info("contactDoc data before save", this.$.contactDoc.data);
                 vData.firstName = e.detail.firstName;
                 vData.lastName = e.detail.lastName;
-                this.selectedContact = vData;
+                this.$.contactDoc.path = "/family-profile/" + this.userId + "/family-contacts/"; 
+                this.$.contactDoc.data = vData;
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/");
             },
-            updateContact: function(e) {                
-                this.selectedContact = e.detail.data;   
+            updateContact: function(e) {        
+                this.$.contactDoc.path = "/family-profile/" + this.userId + "/family-contacts/" + e.detail.key;
+                this.$.contactDoc.data = e.detail.data;   
                 this.$.contactDoc.save("/family-profile/" + this.userId + "/family-contacts/", e.detail.key);
                 this.$.contactDrawer.closeDrawer();
             },

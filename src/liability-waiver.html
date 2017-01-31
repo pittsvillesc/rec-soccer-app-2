@@ -127,11 +127,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     to provide a written clearance for my participant to return to play soccer.
                 </p>
                 <div>
-                    <paper-checkbox checked="{{checkedSignature}}">Check this box to acknowledge you read and understand this agreement</paper-checkbox>
+                    <paper-checkbox id="acknowledged"
+                                    checked="{{checkedSignature}}">Check this box to acknowledge you read and understand this agreement</paper-checkbox>
                     
                 </div>
                 <div class="dialog-input-container">
                     <paper-input label="Relationship to Minor"
+                                 id="relationship"
                                  value="{{relationshipToMinor}}">{{relationshipToMinor}}</paper-input>
                     <vaadin-date-picker id="signedDate"
                                         value="{{signatureDate}}"
@@ -172,6 +174,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             setGuardian: function(e) {
                 this.gKey = e.detail.item.name;
+            },
+            reset: function() {
+                this.$.relationship.value = "";
+                this.$.signedDate.value = "";
+                this.$.acknowledged.checked = false;
+                
             }
         });
     </script>

@@ -46,58 +46,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 @apply(--layout-self-center);
             }
         </style>
+<!--
         <firebase-document id="roDoc" 
                            app-name="registration-app" 
                            path="/family-profile/[[userId]]/volunteer-preferences/requestDates" data="{{data}}" zeroData="{{defaultData}}"> </firebase-document>
+-->
         <div header on-tap="showData">Toggle dates and times that you are <b>unable</b> to work:</div>
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button spec-date="1" checked="{{data.matchDate1.date}}">April 22nd</paper-toggle-button>    
+                <paper-toggle-button spec-date="1" on-change="updateDate1" checked="{{data.matchDate1-date}}">April 22nd</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button date="1" checked="{{data.matchDate1.time.a}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button date="1" checked="{{data.matchDate1.time.b}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button date="1" checked="{{data.matchDate1.time.c}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1-time-a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1-time-b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="1" checked="{{data.matchDate1-time-c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>      
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button date="2" on-change="updateDate" checked="{{data.matchDate2.date}}">April 29th</paper-toggle-button>    
+                <paper-toggle-button date="2" on-change="updateDate2" checked="{{data.matchDate2.date}}">April 29th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button date="2" checked="{{data.matchDate2.time.a}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button date="2" checked="{{data.matchDate2.time.b}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button date="2" checked="{{data.matchDate2.time.c}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2-time-a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2-time-b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="2" checked="{{data.matchDate2-time-c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button date="3" on-change="updateDate" checked="{{data.matchDate3.date}}">May 6th</paper-toggle-button>    
+                <paper-toggle-button date="3" on-change="updateDate3" checked="{{data.matchDate3-date}}">May 6th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button date="3" checked="{{data.matchDate3.time.a}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button date="3" checked="{{data.matchDate3.time.b}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button date="3" checked="{{data.matchDate3.time.c}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3-time-a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3-time-b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="3" checked="{{data.matchDate3-time-c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button date="4" on-change="updateDate" checked="{{data.matchDate4.date}}">May 13th</paper-toggle-button>    
+                <paper-toggle-button date="4" on-change="updateDate4" checked="{{data.matchDate4.date}}">May 13th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button date="4" checked="{{data.matchDate4.time.a}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button date="4" checked="{{data.matchDate4.time.b}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button date="4" checked="{{data.matchDate4.time.c}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4-time-a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4-time-b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="4" checked="{{data.matchDate4-time-c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
         <div class="date-container">
             <div class="date-container-justify">
-                <paper-toggle-button date="5" on-change="updateDate" checked="{{data.matchDate5.date}}">May 20th</paper-toggle-button>    
+                <paper-toggle-button date="5" on-change="updateDate5" checked="{{data-matchDate5-date}}">May 20th</paper-toggle-button>    
             </div>
             <div>
-                <paper-toggle-button date="5" checked="{{data.matchDate5.time.a}}">8:30A - 10:30A</paper-toggle-button>
-                <paper-toggle-button date="5" checked="{{data.matchDate5.time.b}}">10:00A - 12:00A</paper-toggle-button>
-                <paper-toggle-button date="5" checked="{{data.matchDate5.time.c}}">11:30A - 1:30P</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5-time-a}}">8:30A - 10:30A</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5-time-b}}">10:00A - 12:00A</paper-toggle-button>
+                <paper-toggle-button date="5" checked="{{data.matchDate5-time-c}}">11:30A - 1:30P</paper-toggle-button>
             </div>
         </div>       
     </template>
@@ -114,55 +116,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: Object,
                     notify: true
                 },
-                defaultData: {
-                    type: Object,
-                    notify: true,
-                    value: {
-                        matchDate1: {
-                            date: false,
-                            time: {
-                                a: false,
-                                b: false,
-                                c: false
-                            }
-                        },
-                        matchDate2: {
-                            date: false,
-                            time: {
-                                a: false,
-                                b: false,
-                                c: false
-                            }
-                        },
-                        matchDate3: {
-                            date: false,
-                            time: {
-                                a: false,
-                                b: false,
-                                c: false
-                            }
-                        },
-                        matchDate4: {
-                            date: false,
-                            time: {
-                                a: false,
-                                b: false,
-                                c: false
-                            }
-                        },
-                        matchDate5: {
-                            date: false,
-                            time: {
-                                a: false,
-                                b: false,
-                                c: false
-                            }
-                        },
-                    }
-                }
             },
             listeners: {
-                "change": "updateDate"
+//                "change": "updateDate"
             },
             initVal: function() {
                 if (this.data===undefined) {
@@ -172,8 +128,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             showData: function() {
                 console.log(this.data);
             },
-            updateDate: function(e) {
-                console.log(e.target.specDate);
+            updateDate1: function(e) {
+//                if (this.data.matchDate1-date) {
+//                    this.data.matchDate1-time-a = true;
+//                    this.data.matchDate1-time-b = true;
+//                    this.data.matchDate1-time-c = true;
+//                }
+            },
+            updateDate2: function(e) {
+//                if (this.data.matchDate2-date) {
+//                    this.data.matchDate2-time-a = true;
+//                    this.data.matchDate2-time-b = true;
+//                    this.data.matchDate2-time-c = true;
+//                }
+            },
+            updateDate3: function(e) {
+//                if (this.data.matchDate3-date) {
+//                    this.data.matchDate3-time-a = true;
+//                    this.data.matchDate3-time-b = true;
+//                    this.data.matchDate3-time-c = true;
+//                }
+            },
+            updateDate4: function(e) {
+//                if (this.data.matchDate4-date) {
+//                    this.data.matchDate4-time-a = true;
+//                    this.data.matchDate4-time-b = true;
+//                    this.data.matchDate4-time-c = true;
+//                }
+            },
+            updateDate5: function(e) {
+//                if (this.data.matchDate5-date) {
+//                    this.data.matchDate5-time-a = true;
+//                    this.data.matchDate5-time-b = true;
+//                    this.data.matchDate5-time-c = true;
+//                }
             }
         });
     </script>

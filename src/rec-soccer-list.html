@@ -77,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 data: {
                     type: Array,
-                    notify: true
+//                    notify: true
                 },
                 addItem: {
                     type: Object,
@@ -102,7 +102,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             },
             listeners: {
-//                "saveName": "saveName"
+                "saveName": "saveName",
+                "nameSaved": "openForm"
+                
+            },
+            saveName: function() {
+//                this.contactSelected = false;
+//                this.fire("saveName");
             },
             setAddMode: function() {
                 this.$.contactAddItem.hasFocus = true;
@@ -122,10 +128,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     this.fire("openDrawer", {data: e.target.data});    
                 }                            
 //                console.log(e.target.data);
-            },
-            saveName: function(e) {
-                console.log("In Save Name - rec-soccer-list");
-//                this.fire("saveName", {firstName: e.detail.firstName, lastName: e.detail.lastName});  
             },
             showData: function() {
                 console.info("Data:", this.data);

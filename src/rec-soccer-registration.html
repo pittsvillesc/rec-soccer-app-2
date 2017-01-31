@@ -150,6 +150,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     signerKey: "",
                     signedDate: "",
                     signerRelationship: "",
+                    paymentType: "",
+                    paid: false
                 }
                 
 //                this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/" + this.currentRegistration;                
@@ -189,6 +191,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     signerKey: e.detail.regData.signerKey,
                     signedDate: e.detail.regData.signedDate,
                     signerRelationship: e.detail.regData.signerRelationship,
+                    paymentType: "",
+                    paid: false
                 };
                 var vHoldPlayerData = {
                     birthdate: e.detail.playerData.birthdate,
@@ -207,9 +211,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             openDrawer: function(e) {
                 this.currentRegistration = e.detail.data.$key;
+                
                 this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/" + this.currentSeason + "/" + e.detail.data.$key;
-                this.$.regForm.data = this.$.regDoc.data;
-                this.$.regDrawer.openDrawer();
+                if (this.$.regDoc.data.lastName) {
+                    this.$.regForm.data = this.$.regDoc.data;
+                    this.$.regDrawer.openDrawer();
+                } else {
+                    this.setRegistration(e);
+                }
             },
             closeDrawer: function() {
                 this.$.regDrawer.closeDrawer();
@@ -233,7 +242,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.page = "home";
             },
             completeRegistration: function() {
-                this.fire("openVerification");
+                console.log(this.registrationData.length);
+                if (this.registrationData.length === 0) {
+                    alert("You must first add players to register and complete the registration information.");
+                } else {
+                    this.fire("openVerification");
+                }
             }
         });
     </script>
