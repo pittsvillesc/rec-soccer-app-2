@@ -60,6 +60,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <firebase-document id="playerDoc" 
                            app-name="registration-app" 
                            path="/family-profile/[[userId]]/player-profile/{{currentRegistration}}" data="{{playerData}}"> </firebase-document>
+        <firebase-document id="volunteerDoc" 
+                           app-name="registration-app" 
+                           path="/family-profile/[[userId]]/volunteer-preferences" data="{{volData}}"> </firebase-document>
         <paper-drawer-panel id="regDrawer" 
                             right-drawer
                             force-narrow
@@ -122,6 +125,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 currentSeason: {
                     type: String
+                },
+                volData: {
+                    type: Object
                 }
             },
             listeners: {
@@ -235,18 +241,79 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.$.regForm.data.signedDate = obj.date;
                 this.$.regForm.data.signerRelationship = obj.relationship;
             },
-            setToInactive: function() {
-                console.log("Set to inactive");
+            setToInactive: function(e) {
+                console.log("Set to inactive", e.detail.key);
+                
+                this.currentRegistration = e.detail.key;
+                this.$.regDoc.path = "/family-profile/" + this.userId + "/current-registrations/"+ this.currentSeason + "/" + e.detail.key + "/";
+                this.$.regDoc.destroy();
+                this.$.playerDoc.path = "/family-profile/" + this.userId + "/player-profile/" + e.detail.key + "/";
+                var vPlayerData = this.$.playerDoc.data;
+                vPlayerData.isActive = false;
+                console.log("Player Data", vPlayerData);
             },
             refresh: function() {
                 this.page = "home";
             },
             completeRegistration: function() {
-                console.log(this.registrationData.length);
+//                console.log(this.registrationData.length);
                 if (this.registrationData.length === 0) {
                     alert("You must first add players to register and complete the registration information.");
-                } else {
-                    this.fire("openVerification");
+                } else {             
+                    var playerFees = 0;
+                    var playerQty = 0;
+                    var discounts = 0;
+                    var vBoard = false;
+                    var vCoach = false;
+                    var vAstCoach = false;
+                    var vAddtlCoach = false;
+                    var vBuyout = false;
+                    var vTotal = 0;
+                    var vBoardDiscount = 0;
+                    
+                    // loop through the registrations                      
+                    var vRegArray = this.$.currentRegQuery.data;
+                    vRegArray.forEach(function(reg) {
+                        console.log("In reg loop",reg);
+                        if (reg.isActive) {
+                            playerFees += 20;
+                            playerQty += 1;                        
+                        }
+                    });
+
+                    vBoard = (this.volData.boardMember) ? true : false;
+                    vCoach = (!vBoard && ((this.volData.coach) ? true : (this.volData.astCoach) ? true : false));
+//                    vCoach = (!vBoard && (this.volData.coach || this.volData.astCoach));
+                    vAddtlCoach = (!vBoard && (this.volData.moreThanOneTeam ? true : false));
+                    vBuyout = (this.volData.buyoutOption) ? true : false;
+                    if (vBoard) {
+                        discounts = -(playerFees);
+                        vBoardDiscount = discounts;
+                    } else {
+                        if (vCoach) {
+                            discounts -= 20;
+                            if (vAddtlCoach) {
+                                discounts -= 20;
+                            }
+                        }                        
+                    }              
+                    vTotal = (playerFees + (vBuyout ? 35 : 0) + discounts);
+                    vTotal = (vTotal < 0) ? 0 : vTotal;
+//                    console.log(this.registrationData);
+//                    var vRegArray = this.$.
+                    var verificationData = {
+                        playerQty: playerQty,
+                        playerFees: playerFees,
+                        discounts: discounts,
+                        coach: vCoach,
+                        board: vBoard,
+                        addCoach: vAddtlCoach,
+                        total: vTotal,
+                        buyout: vBuyout,
+                        boardDiscount: vBoardDiscount
+                    }
+                    console.info("Verification Data", verificationData);
+                    this.fire("openVerification", verificationData);;
                 }
             }
         });

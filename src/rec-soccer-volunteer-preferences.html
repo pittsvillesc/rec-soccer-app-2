@@ -187,12 +187,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <paper-dropdown-menu id="shirtSize"
                                                  label="T-Shirt Size"
                                                  value="{{data.shirtSize}}">
-                                <paper-listbox class="dropdown-content">
-                                    <paper-item>Small (34-36)</paper-item>
-                                    <paper-item>Medium (38-40)</paper-item>
-                                    <paper-item>Large (42-44)</paper-item>
-                                    <paper-item>X Large (46-48)</paper-item>
-                                    <paper-item>XX Large (50-52)</paper-item>
+                                <paper-listbox class="dropdown-content"
+                                               attr-for-selected="label"
+                                               selected="{{data.shirtSize}}">
+                                    <paper-item label="Small">Small (34-36)</paper-item>
+                                    <paper-item label="Medium">Medium (38-40)</paper-item>
+                                    <paper-item label="Large">Large (42-44)</paper-item>
+                                    <paper-item label="X Large">X Large (46-48)</paper-item>
+                                    <paper-item label="XX Large">XX Large (50-52)</paper-item>
                                 </paper-listbox>
                             </paper-dropdown-menu>    
                         </div>

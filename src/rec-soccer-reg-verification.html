@@ -59,6 +59,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         app-name="registration-app" 
                         path="/family-profile/{{userId}}/family-contacts" 
                         data="{{contactData}}"></firebase-query>
+        <firebase-query id="playerQuery"
+                        app-name="registration-app"
+                        path="/family-profile/{{userId}}/player-profile"
+                        data="{{players}}"></firebase-query>
         <firebase-query id="regQuery" 
                         app-name="registration-app" 
                         path="/family-profile/{{userId}}/current-registrations/{{currentSeason}}" 
@@ -71,7 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
          <!-- primary contact -->
         <div class="primary-container">
-            <paper-card heading="Registration Summary" on-tap="showData">                
+            <paper-card heading="Registration Summary">                
                 
                 &nbsp;&nbsp;&nbsp;<em>Refresh to see changes made in your current session</em>
                 <div class="card-content">
@@ -101,63 +105,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                             <div>shirt size: {{reg.shirtSize}}</div>
                                         </div>
                                     </paper-item-body>
-                                    <div>
-                                        <template is="dom-if" if="{{profileData.volunteer-preferences.boardMember}}">
-                                            $0 
-                                        </template>
-                                        <template is="dom-if" if="{{!profileData.volunteer-preferences.boardMember}}">
-                                            $20 {{incrementTotal(20,profileData.volunteer-preferences.boardMember)}}
-                                        </template>                                        
+                                    <div>                                                                                
+                                        $20 
                                     </div>
                                 </paper-item>
                             </template>
-                            <template is="dom-if" if="{{profileData.volunteer-preferences.buyoutOption}}">
+<!--                            <template is="dom-if" if="{{profileData.volunteer-preferences.buyoutOption}}">-->
+                            <div hidden$="{{!buyout}}">
                                 <paper-item>
                                     <paper-item-body class="detail-flex">Buyout Fee</paper-item-body>
                                     <div>
-                                        $35 {{incrementTotal(35,profileData.volunteer-preferences.boardMember)}}
+                                        $35
                                     </div>
                                 </paper-item>
-                            </template>
-                            <template is="dom-if" if="{{showCoachingDiscount(profileData.volunteer-preferences.astCoach, profileData.volunteer-preferences.coach, profileData.volunteer-preferences.boardMember)}}">
+                            </div>
+<!--                            </template>-->
+<!--                            <template is="dom-if" if="{{profileData.volunteer-preferences.boardMember}}">-->
+                            <div hidden$="{{!isBoard}}">
+                                <paper-item>
+                                    <paper-item-body class="detail-flex">Board Member Discount</paper-item-body>
+                                    <div>
+                                        -${{boardDiscount}}
+                                    </div>
+                                </paper-item>
+                            </div>
+<!--                            </template>-->
+<!--                            <template is="dom-if" if="{{!profileData.volunteer-preferences.boardMember}}">-->
+<!--                                <template is="dom-if" if="{{(profileData.volunteer-preferences.astCoach || profileData.volunteer-preferences.coach)}}">-->
+                            <div hidden$="{{!isCoach}}">
                                 <paper-item>
                                     <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
                                     <div>
-                                        -$20 {{incrementTotal(-20,profileData.volunteer-preferences.boardMember)}}
+                                        -$20
                                     </div>
                                 </paper-item>
-                            </template>
-                            <template is="dom-if" if="{{showCoachingDiscount2(profileData.volunteer-preferences.moreThanOneTeam, profileData.volunteer-preferences.boardMember)}}">
-                                <paper-item>
-                                    <paper-item-body class="detail-flex">Coaching Discount</paper-item-body>
-                                    <div>
-                                        -$20 {{incrementTotal(-20,profileData.volunteer-preferences.boardMember)}}
-                                    </div>
-                                </paper-item>
-                            </template>
+                            </div>
+<!--                                </template>-->
+<!--                                <template is="dom-if" if="{{profileData.volunteer-preferences.moreThanOneTeam}}">-->
+                            <div hidden$="{{!coachesMultiple}}">
+                                    <paper-item>
+                                        <paper-item-body class="detail-flex">Addtl Coaching Discount</paper-item-body>
+                                        <div>
+                                            -$20
+                                        </div>
+                                    </paper-item>
+                            </div>
+<!--                                </template>-->
+<!--                            </template>                            -->
                             <paper-item>
                                 <paper-item-body class="detail-flex"><b>Total Amount Due</b></paper-item-body>
                                 <div>
-                                    <b>${{totalDue}}.00</b>
+                                    <b>{{total}}.00</b>
                                 </div>
                             </paper-item>
                         </div>
                     </div>   
-                    <div class="summary-container">
-                        <template is="dom-if" if="{{showButtons(totalDue)}}">
-                            <paypal-button class="checkout-buttons"
-                                           id="paypal"
-                                           total-due="0.01"
-                                           on-tap="setButtonId"></paypal-button>
-                            <paper-button class="checkout-buttons"
-                                          raised
-                                          on-tap="completeUnpaidReg">I will send a check via U.S. Mail</paper-button>
-                        </template>
-                        <template is="dom-if" if="{{!showButtons(totalDue)}}">
-                            <paper-button class="checkout-buttons"
-                                          raised
-                                          on-tap="completeReg">Complete Registration</paper-button>
-                        </template>                        
+                    <div class="summary-container">                        
+                        <paypal-button class="checkout-buttons"
+                                       id="paypal"
+                                       total-due="{{total}}"
+                                       on-tap="setButtonId"
+                                       hidden$="{{!showPaymentBtn(total)}}"></paypal-button>
+                        <paper-button class="checkout-buttons"
+                                      raised
+                                      hidden$="{{!showPaymentBtn(total)}}"
+                                      on-tap="completeUnpaidReg">I will send a check via U.S. Mail</paper-button>                                                
+                        <paper-button class="checkout-buttons"
+                                      raised
+                                      hidden$="{{showPaymentBtn(total)}}"
+                                      on-tap="completeReg">Complete Registration</paper-button>                        
                     </div>
                 </div>
             </paper-card>
@@ -175,12 +191,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: "<rec-soccer-reg-verification></rec-soccer-reg-verification>",
                 },
-                profileData: {
-                    type: Object,
-                    notify: true
-                },
                 contactData: {
                     type: Array,
+                },
+                players: {
+                    type: Array,
+                    notify: true
+                },
+                currentSeason: {
+                    type: String
                 },
                 regData: {
                     type: Array,
@@ -189,124 +208,88 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 userId: {
                     type: String,
                 },
-                totalDue: {
-                    type: String,
-                    value: "0"
-                }
+                playerFees: {
+                    type: Number
+                },
+                playerQty: {
+                    type: Number
+                },
+                discounts: {
+                    type: Number
+                },
+                isBoard: {
+                    type: Boolean
+                },
+                isCoach: {
+                    type: Boolean
+                },
+                coachesMultiple: {
+                    type: Boolean
+                },
+                buyout: {
+                    type: Boolean
+                },
+                boardDiscount: {
+                    type: Number
+                },
+                total: {
+                    type: Number
+                },
             },
-            showButtons: function(pDue) {
-                if (pDue == "0") {
-                    return false;
-                }  else {
+            showPaymentBtn: function(pTot) {
+                console.log("Buttons --> Total", pTot);
+                if (pTot !== 0) {
                     return true;
-                }
-            },
-            showCoachingDiscount: function(pCoach, pAst, pBoard) {
-                if (pBoard) {
-                    return false;
                 } else {
-                    if (pCoach || pAst) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            },
-            showCoachingDiscount2: function(pCoach, pBoard){
-                if (pBoard) {
                     return false;
-                } else {
-                    return pCoach;
                 }
             },
-//            ready: function() {
-//                var subtotal = 0.0;
-//                if (this.profileData.volunteer-preferences.boardMember) {
-//                    subtotal = 0.0;
-//                } else {
-//                    this.regData.forEach(function() {
-//                        subtotal += 20;
-//                    })
-//                    this.totalDue = subtotal;
-//                }
-//            },
             showContact: function(item) {
-//                console.info(item);
-                if (item.primaryContact) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (item.primaryContact);                
             },
             hasAppt: function(pApt) {
-                if (pApt === "") {
-                    return false;
-                } else {
-                    return true;
-                }                
-            },
-            
-            coachingDiscount: function() {
-                console.log(this.profileData);
-                if (this.profileData.volunteerPreferences.astCoach || this.profileData.volunteerPreferences.coach)  {
-                    return true;
-                } else {
-                    return false;
-                }
-            },
-            showData: function() {
-                console.info("Profile Data", this.profileData);
-//                this.getTotalDue();
-            },
-            incrementTotal: function(pVal,pBoard) {
-                if (pBoard) {
-                    this.totalDue = "0";
-                } else {
-                    this.totalDue = parseInt(this.totalDue) + pVal;
-                    console.info("Incremented Total Due: ", this.totalDue);
-                }
-                return "";
-            },
+                return (pApt !== "");
+            },                                    
             setButtonId: function() {
 //                alert(this.totalDue);
                 switch(this.totalDue) {
-                    case "20":
+                    case 20:
                        this.$.paypal.buttonId = "PJMFD8W2XHX46";
                         break;
-                    case "40":
+                    case 40:
                         this.$.paypal.buttonId = "ARLQAGSECFXEE";
                         break;
-                    case "60":
+                    case 60:
                         this.$.paypal.buttonId = "7YGFNHG96XENS";
                         break;
-                    case "80":
+                    case 80:
                         this.$.paypal.buttonId = "GSYG3BS77TV5Y";
                         break;
-                    case "100":
+                    case 100:
                         this.$.paypal.buttonId = "4HUUXCFCKJWAW";
                         break;
-                    case "120":
+                    case 120:
                         this.$.paypal.buttonId = "8WPWFEBTHUMZQ";
                         break;
-                    case "55":
+                    case 55:
                         this.$.paypal.buttonId = "R5QT3JUWKJCKE";
                         break;
-                    case "75":
+                    case 75:
                         this.$.paypal.buttonId = "FQBK68DJMEAUE";
                         break;
-                    case "95":
+                    case 95:
                         this.$.paypal.buttonId = "RENW4KPZ2KHWN";
                         break;
-                    case "115":
+                    case 115:
                         this.$.paypal.buttonId = "QTXUYKC5UM2QN";
                         break;
-                    case "135":
+                    case 135:
                         this.$.paypal.buttonId = "V4VH2DFGLQWSN";
                         break;
-                    case "155":
+                    case 155:
                         this.$.paypal.buttonId = "FNA3Q4EYELAR8";
                         break;
-                    case "0.01":
+                    case 0.01:
                         this.$.paypal.buttonId = "YWWBVDMAPXMMJ";
                         break;
                     default:
@@ -314,25 +297,115 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         
                 }
                 this._completeRegistration("PayPal", false);
-//                alert("Id Set: " + this.$.paypal.buttonId);
             },
             completeReg: function() {
-//                console.info("Reg Data", this.regData);
-//                this.regData.forEach(function(item) {
-//                    console.info("Item",item);
-//                })
                 this._completeRegistration("no payment", true);  
             },
             completeUnpaidReg: function() {
                 this._completeRegistration("Check", false);  
             },
             _completeRegistration: function(pType,pPaid) {
+                var vSuccess = false;
+                this._copyToPayments(pType,pPaid);
+                this._copyToLeagueRegistrations();
+                this._setPlayersToInactive(); 
+                this._archiveAndDeleteCurrentRegistrations();
+                
+                alert("Success!  Thank you for registering!");
+                this.fire("goHome");
+                                
+            },
+            _copyToPayments: function(pType,pPaid) {
+                this.$.verDoc.path = "/family-profile/" + this.userId + "/payments/" + this.currentSeason + "/";
+                this.$.verDoc.data = {
+                    paymentType: pType,
+                    paid: pPaid,
+                    playerFees: this.playerFees,
+                    playerQty: this.playerQty,
+                    discounts: this.discounts,
+                    isBoard: this.isBoard,
+                    isCoach: this.isCoach,
+                    coachesMultiple: this.coachesMultiple,
+                    buyout: this.buyout,
+                    total: this.total
+                };
+                var vPromise = this.$.verDoc.save("/family-profile/" + this.userId + "/payments/" + this.currentSeason + "/");
+                vPromise.then(function(result) {
+                    return true;
+                }, function(err) {
+                    alert("Message #417 - please email this message to pittsvillesc@gmail.com");
+                    return false;
+                });                
+            },
+            _copyToLeagueRegistrations: function() {
+                var vRegDoc = this.$.verDoc;
+                var vPath = "/league-registrations/" + this.currentSeason + "/";
+                
                 this.regData.forEach(function(item) {
-                    item.paymentType = pType;
-                    item.paid = pPaid;
+                    var vData = {
+                        acknowledgedConcussionInfo: item.acknowledgedConcussionInfo,
+                        acnkowledfedWaiver: item.acknowledgedWaiver,
+                        birthdate: item.birthdate,
+                        competitive: item.competitive,
+                        division: item.division,
+                        email: item.email,
+                        firstName: item.firstName,
+                        grade: item.grade,
+                        lastName: item.lastName,
+                        school: item.school,
+                        shirtSize: item.shirtSize,
+                        signedDate: item.signedDate,
+                        signerKey: item.signerKey,
+                        signerRelationship: item.signerRelationship
+                    }
+                    vRegDoc.path = vPath;
+                    vRegDoc.data = vData;
+                    vRegDoc.save(vPath);
                 });
-            }
-            
+            },
+            _setPlayersToInactive: function() {
+                this.players.forEach(function(player) {
+                    console.info("Player", player);
+                    player.isActive = false;
+                });                
+                this.$.playerQuery.data = this.players;
+                this.$.playerQuery.save();
+            },
+            _archiveAndDeleteCurrentRegistrations: function() {     
+                var vRegDoc = this.$.verDoc;
+                var vPath = "/family-profile/" +  this.userId + "/archived-registrations/" + this.currentSeason + "/";
+                var vRegPath = "/family-profile/" +  this.userId + "/current-registrations/" + this.currentSeason + "/";
+                this.regData.forEach(function(item) {                   
+                    var vData = {
+                        acknowledgedConcussionInfo: item.acknowledgedConcussionInfo,
+                        acnkowledfedWaiver: item.acknowledgedWaiver,
+                        birthdate: item.birthdate,
+                        competitive: item.competitive,
+                        division: item.division,
+                        email: item.email,
+                        firstName: item.firstName,
+                        grade: item.grade,
+                        lastName: item.lastName,
+                        school: item.school,
+                        shirtSize: item.shirtSize,
+                        signedDate: item.signedDate,
+                        signerKey: item.signerKey,
+                        signerRelationship: item.signerRelationship
+                    }
+                    vRegDoc.path = vPath;
+                    vRegDoc.data = vData;
+                    var vPromise = vRegDoc.save(vPath, item.$key);
+//                    = vRegPath + item.$key + "/";
+                    vPromise.then(function(result) {
+                        vRegDoc.path = vRegPath + item.$key;
+                        vRegDoc.destroy();
+                        return true;
+                    }, function(err) {
+                        alert("Message #1683 - please email this message to pittsvillesc@gmail.com");
+                        return false;
+                    });
+                });
+            },
         });
     </script>
 </dom-module>

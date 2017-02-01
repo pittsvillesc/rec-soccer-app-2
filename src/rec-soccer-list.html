@@ -53,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-item class="list-item" on-focus="selectContact" data="[[item]]">
                 <div class="item-col-container">
                     <div class="item-col-l">
-                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]" on-change="checkboxFire" data="[[item]]" checked="[[item.isActive]]"></paper-checkbox>                        
+                        <paper-checkbox id="cb-[[index]]" hidden$="[[!showCheckbox]]" on-change="checkboxFire" data="[[item]]" checked="{{item.isActive}}"></paper-checkbox>                        
                     </div>
                     <div class="item-col-m">
                         [[item.firstName]] [[item.lastName]]
@@ -138,7 +138,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         data: e.target.data
                     });
                 } else {
-                    this.fire("uncheck");
+                    this.fire("uncheck", {
+                        key: e.target.data.$key
+                    });
                 }
             }
         });

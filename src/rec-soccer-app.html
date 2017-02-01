@@ -303,7 +303,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <rec-soccer-volunteer-preferences name="volunteer-preferences"
                                                       class="list-container"
                                                       user-id="[[user.uid]]"></rec-soccer-volunteer-preferences>
-                    <rec-soccer-reg-verification name="reg-verification"
+                    <rec-soccer-reg-verification id="completeReg"
+                                                 name="reg-verification"
                                                  user-id="[[user.uid]]"
                                                  current-season="{{control.currentSeason}}"
                                                  class="list-container"></rec-soccer-reg-verification>
@@ -401,6 +402,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             
             listeners: {
                 "showData": "showData",
+                "goHome": "goHome",
                 "saveContact": "saveContact",
                 "volunteer": "volunteerRedirect",
                 "openConcussion": "openConcussion",
@@ -481,9 +483,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 //                this.$.waiverDialog.reset();
                 this.$.waiverDialog.close();
             },
-            verificationRedirect: function() {
-                this.header = "Complete" + this.control.currentSeason + " Registration";
+            verificationRedirect: function(e) {
+                var el = this.$.completeReg;
+                this.header = "Complete " + this.control.currentSeason + " Registration";
+                el.playerFees = e.detail.playerFees;
+                el.playerQty = e.detail.playerQty;
+                el.discounts = -(e.detail.discounts);
+                el.isBoard = e.detail.board;
+                el.isCoach = e.detail.coach;
+                el.coachesMultiple = e.detail.addCoach;
+                el.buyout = e.detail.buyout;
+                el.total = e.detail.total;
+                el.boardDiscount = -(e.detail.boardDiscount);
                 this.page = "reg-verification";
+            },
+            goHome: function() {
+                this.page = "home";
             }
         });
 
