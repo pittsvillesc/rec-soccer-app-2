@@ -199,7 +199,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     notify: true
                 },
                 currentSeason: {
-                    type: String
+                    type: String,
+                    value: "2017 Spring"
                 },
                 regData: {
                     type: Array,
@@ -251,8 +252,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 return (pApt !== "");
             },                                    
             setButtonId: function() {
-//                alert(this.totalDue);
-                switch(this.totalDue) {
+//                alert(this.total);
+                switch(this.total) {
                     case 20:
                        this.$.paypal.buttonId = "PJMFD8W2XHX46";
                         break;
@@ -310,9 +311,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this._copyToLeagueRegistrations();
                 this._setPlayersToInactive(); 
                 this._archiveAndDeleteCurrentRegistrations();
+                if (pType === "PayPal") {
+                    alert("You have successfully completed the registration.  Please be patient as we redirect you to PayPal for payment.");
+                } else {
+                    alert("Success!  Thank you for registering!");
+                    this.fire("goHome");
+                }
                 
-                alert("Success!  Thank you for registering!");
-                this.fire("goHome");
                                 
             },
             _copyToPayments: function(pType,pPaid) {

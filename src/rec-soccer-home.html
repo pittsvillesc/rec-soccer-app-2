@@ -1,0 +1,135 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="rec-soccer-home">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+            paper-card {
+                margin: 14px;
+                min-width: 325px;
+                max-width: 650px;                    
+            }
+            #welcomeCard {
+                max-width: 950px;
+                
+            }
+            .welcome {
+                @apply(--layout-horizontal);
+                @apply(--layout-center-justified);
+            }
+            li {
+                margin-top: 10px;
+            }
+            .page-container {
+                width: 100%;
+                @apply(--layout-vertical);                
+            }
+            .sub-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-around-justified);
+            }
+            .match-dates {
+                @apply(--layout-self-start);
+            }
+            
+        </style>
+
+        <div class="page-container">
+            <div class="sub-container">
+                <paper-card id="welcomeCard"
+                            heading="Welcome to the new Wisconsin Rapids Rec Soccer Registration Site!">
+                    <div class="card-content">
+                        <p><b>We hope you're ready to play some soccer!</b></p>
+                        <p>You may have noticed we have a different site.  Hopefully this will make things easier on you from season to season when you register.</p>
+                        <p>As we continue working on it, you will see new features throughout the season, so stop in every now and then.</p>       
+                        <b>If you are having trouble or notice a bug with the website, please send an email to Robby (<a href="mailto:pittsvillesc@gmail.com">pittsvillesc@gmail.com</a>)</b>
+                    </div>
+                </paper-card>
+            </div>
+            <div class="sub-container">
+                <paper-card id="instructions"
+                            heading="How do I register?">
+                    <div class="card-content">
+                        <ol>
+                            <li>
+                                <div class="helpText">
+                                    First you must register or sign in.  Go ahead and click the "Sign In" option on the left.
+                                </div>
+                            <li>
+                                <div class="helpText">
+                                    We need some parent or guardian information.  Click on <b>"Family" (<iron-icon icon="communication:contacts"></iron-icon>)</b> in the menu to enter a family contact. Make sure that at least one contact is flagged as the "Primary Contact".
+                                </div>
+                            </li>
+                            <li>
+                                <div class="helpText">
+                                    While in the Family area, be sure to enter your volunteer preferences by clicking the <b>"Volunteer Preferences" (<iron-icon icon="work"></iron-icon>)</b> button beneath the entered contacts.  We will save your changes as you make them so it is not necessary to click a "save" button.  Also note, that you may enter your volunteer shift preferences on this screen as well.
+                                </div>
+                            </li>
+                            <li>
+                                <div class="helpText">
+                                    Add some kids!  Click on the <b>"Players" (<iron-icon icon="places:child-care"></iron-icon>)</b> option to start entering your players.  Once they are entered, you can easily complete registrations from season to season without re-entering a ton of information!  
+                                </div>
+                            </li>
+                            <li>
+                                <div class="helpText">
+                                    Now go to the <b>"Registration" (<iron-icon icon="assignment"></iron-icon>)</b> page.  Here you select the players that are on file that you want to register for a particular season.  Here you will be asked to enter information that is specific to the season.
+                                </div>
+                            </li>                        
+                            <li>
+                                <div class="helpText">
+                                    Once you are complete adding the players for the coming season, click on the button on that screen to <b>"Complete Registration" (<iron-icon icon="payment"></iron-icon>)</b>.  This will take you to a summary of your registration along with payment options.
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="helpText">
+                                    After reviewing the registration, please take advantage of the online payment option through PayPal.  When you click the PayPal button, it will take you away from our site to the PayPal website where you can complete the payment.  If you leave the PayPal site without paying, don't worry, your registration has been recorded.  We will be adding an account area to the site in the coming weeks where you can make payments on existing balances.
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </paper-card>
+                <paper-card heading="Match Dates" class="match-dates">
+                    <div class="card-content">
+                        <em>All matches take place on Sunday mornings and afternoons at Washington Soccer Fields</em>
+                        <ul>
+                            <li>April 22nd</li>
+                            <li>April 29th</li>
+                            <li>May 6th</li>
+                            <li>May 13th</li>
+                            <li>May 20th</li>
+                        </ul>
+                    </div>
+                </paper-card>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: '',
+            properties: {
+                title: {
+                    type: String,
+                    value: "<rec-soccer-home></rec-soccer-home>",
+                },
+            }
+        });
+    </script>
+</dom-module>

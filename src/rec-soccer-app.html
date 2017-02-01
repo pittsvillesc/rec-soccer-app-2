@@ -179,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            class="drawer-list" 
                            role="navigation">
                 <a name="home"
-                   href="/">
+                   href="/home">
                     <div class="link-icon">
                         <iron-icon icon="home"></iron-icon>
                     </div>
@@ -272,14 +272,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             
             <div hidden$="[[!signedIn]]">
+<!--
                 <firebase-document id="controlDoc" 
                            app-name="registration-app" 
-                           path="/admin/control" data="{{control}}"> </firebase-document>
+                           path="/admin/control/" data="{{control}}"> </firebase-document>
+-->
                 <iron-pages selected="[[page]]" 
                             attr-for-selected="name" 
                             fallback-selection="view404" 
                             role="main">
-
+                    <rec-soccer-home name="home"></rec-soccer-home>
                     <rec-soccer-contacts name="contacts"
                                          class="list-container"class="list-container"
                                          user-id="[[user.uid]]">                    
@@ -295,7 +297,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                              name="registration"
                                              class="list-container"
                                              user-id="[[user.uid]]"
-                                             current-season="{{control.currentSeason}}"
+                                             current-season="2017 Spring"
                                              concussion-acknoledged$="{{concussionAcknowledged}}"></rec-soccer-registration>
                     <rec-soccer-view404 name="view404"
                                         class="list-container"></rec-soccer-view404>
@@ -306,7 +308,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <rec-soccer-reg-verification id="completeReg"
                                                  name="reg-verification"
                                                  user-id="[[user.uid]]"
-                                                 current-season="{{control.currentSeason}}"
+                                                 current-season="2017 Spring"
                                                  class="list-container"></rec-soccer-reg-verification>
                 </iron-pages>
                 
@@ -377,9 +379,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     notify: true,                 
                     value: "Wis. Rapids Rec Soccer"
                 },
-                control: {
-                    type: Object
-                },
+//                control: {
+//                    type: Object
+//                },
                 concussionAcknoledged: {
                     type: Boolean,
                     value: false,
@@ -412,12 +414,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             _routePageChanged: function(page) {
-                this.page = page || 'contacts';
+                this.page = page || 'home';
                 
                 if (!this.$.drawer.persistent) {
                     this.$.drawer.close();
                 }
-                console.info(page);
+//                console.info(page);
                 switch(page) {
                     case "contacts":
                         this.header = "Family Contacts";
@@ -432,7 +434,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.header = "Volunteer Preferences";
                         break;
                     case "reg-verification":
-                        this.header = "Complete" + this.control.currentSeason + " Registration"
+                        this.header = "Complete 2017 Fall Registration";
+                    default:
+                        this.header = "Home";
+                        break;
                 }
             },
             saveContact: function(e) {
@@ -485,7 +490,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             verificationRedirect: function(e) {
                 var el = this.$.completeReg;
-                this.header = "Complete " + this.control.currentSeason + " Registration";
+                this.header = "Complete 2017 Fall Registration";
                 el.playerFees = e.detail.playerFees;
                 el.playerQty = e.detail.playerQty;
                 el.discounts = -(e.detail.discounts);

@@ -25,22 +25,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /*                height: 100%;*/
 /*                overflow: auto;*/
 /*                padding: 10px;*/
+                --paper-checkbox-margin: 2px;
             }
             paper-drawer-panel {
                 top: 50px;
                 margin-left: 0px;
             }
             paper-card {
-                width: 75%;
+                width: 100%;
                 min-width: 325px;
-                padding: 10px;
-                margin: 10px;
+                padding: 2px;
+                margin: 2px;
                     
             }
             paper-item {
                 width: 100%;
+                margin-left: 0px;
             }
-            
+            paper-checkbox {
+                width: 100%;
+/*                margin-left: 8px;*/
+            }
             #main-panel {
                 @apply(--layout-horizontal);
                 @apply(--layout-center-justified);
@@ -50,6 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 @apply(--layout-horizontal);
                 @apply(--layout-around-justified);
                 @apply(--layout-wrap);
+                
             }
             paper-button {
                 background-color: var(--app-primary-color);
@@ -171,18 +177,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     </paper-item>
                                 </paper-checkbox>
                             </div>
-                            
-                        </div>  
-                        <div class="option-container">
-                            <paper-checkbox id="multipleTeams"
+                            <div>
+                                <paper-checkbox id="multipleTeams"
                                             checked="{{data.moreThanOneTeam}}">
-                                <paper-item>
-                                    <paper-item-body>
-                                        <div>Coaching more than one team</div>
-                                    </paper-item-body>
-                                </paper-item>
-                            </paper-checkbox>
-                        </div>
+                                    <paper-item>
+                                        <paper-item-body>
+                                            <div>Coaching more than one team</div>
+                                        </paper-item-body>
+                                    </paper-item>
+                                </paper-checkbox>
+                            </div>
+                        </div>  
                         <div class="option-container">
                             <paper-dropdown-menu id="shirtSize"
                                                  label="T-Shirt Size"
